@@ -1,0 +1,2 @@
+2022-10-01 19:40:06,952 [ERROR anvil.app-server.run] Failed to start mail server on port 25 - this application will not be able to receive email:  java.net.BindException: Permission denied
+2022-10-01 19:44:31,935 [ERROR anvil.app-server.run] Failed to start mail server on port 25 - this application will not be able to receive email:  java.net.BindException: Permission denied
