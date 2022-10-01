@@ -1,0 +1,10 @@
+services: []
+package_name: Classic_1
+allow_embedding: false
+name: Classic 1
+runtime_options: {version: 2, client_version: '3', server_version: python3-sandbox,
+  server_spec: null}
+metadata: {}
+startup_form: Form1
+db_schema: {}
+renamed: true
