@@ -1,5 +1,7 @@
 #!/bin/sh
 
-anvil-app-server --app $(dirname $0) &
-sleep 10s
-chromium --kiosk http://localhost:3030
+PATH="$PATH:$HOME/.local/bin"
+cd $(dirname $0)
+nohup anvil-app-server --app . &
+sleep 50s
+nohup chromium-browser --kiosk http://localhost:3030 &
