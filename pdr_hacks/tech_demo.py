@@ -1,6 +1,6 @@
 #tech_demo.py
 import sys
-import RPI.GPIO as GPIO
+import RPi.GPIO as GPIO
 import get_scanner
 
 def main(argv):
@@ -35,6 +35,32 @@ def main(argv):
 
     # Pipe scanner input to subshell
     while True:
-        print(get_scanner.x)
+        #print(get_scanner.x)
+        card= get_scanner.x
         GPIO.output(2,True)
+        #check user 1
+        if (( user_1_state == 0 ) and (card== USER_1 )):
+            GPIO.output(4,True)
+            user_1_state=1
+            print("USER 1")
+		#check user 2
+        if (( user_2_state == 0 ) and (card== USER_2 )):
+            GPIO.output(17,True)
+            user_2_state=1
+            print("USER 2")
+            
+        if(user_1_state):
+            GPIO.output(2,True)
+            GPIO.output(3,False)
+            print("ACTIVATED")
+            GPIO.output(14,True)
+        if((card != USER_1) and (card != USER_2)):
+            GPIO.output(2,False)
+            GPIO.output(3,True)
+            print("DISABLED")
+            GPIO.output(14,False)
+            user_1_state =0
+            user_2_state =0
+            
+        
     
