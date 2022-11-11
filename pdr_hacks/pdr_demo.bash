@@ -26,8 +26,7 @@ echo "1" > /sys/class/gpio/gpio3/value
 echo "INITIALIZED"
 
 # Pipe scanner input to subshell
-
-/home/project13/bin/get_scanner.py |
+./get_scanner.py |
 	{
 		while read card; do
 			# Register cards read
