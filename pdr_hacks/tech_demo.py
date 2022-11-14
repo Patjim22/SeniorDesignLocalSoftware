@@ -34,9 +34,11 @@ def main(argv):
     print("INITIALIZED")
 
     # Pipe scanner input to subshell
-    while True:
-        print(get_scanner.x)
-        card= get_scanner.x
+    while True: 
+        
+        print("INITIALIZED")
+        #print(get_scanner.x)
+        card= 0
         GPIO.output(2,True)
         #check user 1
         if (( user_1_state == 0 ) and (card== USER_1 )):
