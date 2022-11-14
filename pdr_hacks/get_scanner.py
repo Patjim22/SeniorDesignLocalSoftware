@@ -55,6 +55,6 @@ for event in dev.read_loop():
       if (data.scancode != 42) and (data.scancode != 28): 
        x += key_lookup 
       if(data.scancode == 28): 
-       print (x)   # Print it all out! 
+       #print (x)   # Print it all out! 
        x = ''
 

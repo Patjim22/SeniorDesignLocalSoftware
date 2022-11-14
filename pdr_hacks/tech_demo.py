@@ -35,7 +35,7 @@ def main(argv):
 
     # Pipe scanner input to subshell
     while True:
-        #print(get_scanner.x)
+        print(get_scanner.x)
         card= get_scanner.x
         GPIO.output(2,True)
         #check user 1
