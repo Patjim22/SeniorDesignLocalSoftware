@@ -48,13 +48,14 @@ def user_authentication(card):
         global user_1_state
         global user_2_state
         print("Woo a card "+card)
+        
         #check user 1
-        if ((  user_1_state == 0 ) and (card== USER_1 )):
+        if ((  user_1_state == 0 ) and (card== str(USER_1) )):
             GPIO.output(4,True)
             user_1_state=1
             print("USER 1")
 		#check user 2
-        if (( user_2_state == 0 ) and (card== USER_2 )):
+        if (( user_2_state == 0 ) and (card== str(USER_2) )):
             GPIO.output(17,True)
             user_2_state=1
             print("USER 2")
@@ -64,7 +65,7 @@ def user_authentication(card):
             GPIO.output(3,False)
             print("ACTIVATED")
             GPIO.output(14,True)
-        if((card != USER_1) and (card != USER_2)):
+        if((card != str(USER_1)) and (card != str(USER_2))):
             GPIO.output(2,False)
             GPIO.output(3,True)
             print("DISABLED")
