@@ -23,10 +23,10 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
     
     #add all used gpio pins for configuration
-channel_list = [2,3,4,17,27,14]
+channel_list = (2,3,4,17,22,27,14)
     # Sets up GPIO 2 (Pin 3 as an output) 
 GPIO.setup(channel_list, GPIO.OUT)
-GPIO.output(channel_list,0)
+GPIO.output(channel_list,GPIO.LOW)
     
     # Define constants and variables
 
