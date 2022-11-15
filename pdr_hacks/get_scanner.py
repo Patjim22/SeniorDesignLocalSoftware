@@ -80,6 +80,7 @@ def user_authentication(card):
             
 while (True):
     card =input()
+    print(card)
     user_authentication(card)
 
 
