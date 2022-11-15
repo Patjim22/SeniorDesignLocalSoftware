@@ -26,7 +26,7 @@ GPIO.setmode(GPIO.BCM)
 channel_list = [2,3,4,17,27,14]
     # Sets up GPIO 2 (Pin 3 as an output) 
 GPIO.setup(channel_list, GPIO.OUT)
-GPIO.output(channel_list,False)
+GPIO.output(channel_list,0)
     
     # Define constants and variables
 
