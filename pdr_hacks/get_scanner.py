@@ -69,6 +69,7 @@ def user_authentication(card):
         if((card != str(USER_1)) and (card != str(USER_2))):
             GPIO.output(2,False)
             GPIO.output(3,True)
+            GPIO.output(14,False)
             print("DISABLED")
             GPIO.output(14,False)
             user_1_state =0
