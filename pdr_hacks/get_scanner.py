@@ -45,9 +45,11 @@ print("INITIALIZED")
 
 def user_authentication(card):
         GPIO.output(2,True)
-        print("Woo a card "+x)
+        global user_1_state
+        global user_2_state
+        print("Woo a card "+card)
         #check user 1
-        if (( user_1_state == 0 ) and (card== USER_1 )):
+        if ((  user_1_state == 0 ) and (card== USER_1 )):
             GPIO.output(4,True)
             user_1_state=1
             print("USER 1")
