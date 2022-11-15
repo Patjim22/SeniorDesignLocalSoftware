@@ -45,6 +45,7 @@ GPIO.output(3,True)
 print("INITIALIZED")
 
 def user_authentication(card):
+        
         GPIO.output(2,True)
         global user_1_state
         global user_2_state
@@ -61,21 +62,25 @@ def user_authentication(card):
             user_2_state=1
             print("USER 2")
             
-        if(user_1_state):
+        if(user_2_state):
             GPIO.output(2,True)
             GPIO.output(3,False)
             print("ACTIVATED")
             GPIO.output(14,True)
+            
+        
         if((card != str(USER_1)) and (card != str(USER_2))):
             GPIO.output(2,False)
             GPIO.output(3,True)
-            GPIO.output(14,False)
+            GPIO.output(17,False)
             print("DISABLED")
             GPIO.output(14,False)
             user_1_state =0
             user_2_state =0
             
-
+while (True):
+    card =input()
+    user_authentication(card)
 
 
 scancodes = { 
@@ -104,23 +109,24 @@ caps = False
 
 
 #loop 
-for event in dev.read_loop(): 
-    if event.type == ecodes.EV_KEY: 
-     data = categorize(event) # Save the event temporarily to introspect it 
-     if data.scancode == 42: 
-      if data.keystate == 1: 
-       caps = True 
-      if data.keystate == 0: 
-       caps = False 
-     if data.keystate == 1: # Down events only 
-      if caps: 
-       key_lookup = u'{}'.format(capscodes.get(data.scancode)) or u'UNKNOWN:[{}]'.format(data.scancode) # Lookup or return UNKNOWN:XX 
-      else: 
-       key_lookup = u'{}'.format(scancodes.get(data.scancode)) or u'UNKNOWN:[{}]'.format(data.scancode) # Lookup or return UNKNOWN:XX 
-      if (data.scancode != 42) and (data.scancode != 28): 
-       x += key_lookup 
-      if(data.scancode == 28): 
-       print (x)   # Print it all out! 
-       user_authentication(x)
-       x = ''
+
+# for event in dev.read_loop(): 
+#     if event.type == ecodes.EV_KEY: 
+#      data = categorize(event) # Save the event temporarily to introspect it 
+#      if data.scancode == 42: 
+#       if data.keystate == 1: 
+#        caps = True 
+#       if data.keystate == 0: 
+#        caps = False 
+#      if data.keystate == 1: # Down events only 
+#       if caps: 
+#        key_lookup = u'{}'.format(capscodes.get(data.scancode)) or u'UNKNOWN:[{}]'.format(data.scancode) # Lookup or return UNKNOWN:XX 
+#       else: 
+#        key_lookup = u'{}'.format(scancodes.get(data.scancode)) or u'UNKNOWN:[{}]'.format(data.scancode) # Lookup or return UNKNOWN:XX 
+#       if (data.scancode != 42) and (data.scancode != 28): 
+#        x += key_lookup 
+#       if(data.scancode == 28): 
+#        print (x)   # Print it all out! 
+#        user_authentication(x)
+#        x = ''
 
