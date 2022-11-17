@@ -23,7 +23,7 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
     
     #add all used gpio pins for configuration
-channel_list = (2,3,4,17,22,27,14)
+channel_list = (2,3,4,17,22,27,14) #pin 2 needs changed
     # Sets up GPIO 2 (Pin 3 as an output) 
 GPIO.setup(channel_list, GPIO.OUT)
 GPIO.output(channel_list,GPIO.LOW)
@@ -39,44 +39,48 @@ user_2_state=0
     # Set power pin to on
 GPIO.output(27,True)
     # Set switch pin to default
-GPIO.output(3,True)
+GPIO.output(3,False)#usb
+GPIO.output(2,False)#opto
 
     # Give scanner time to get online
 print("INITIALIZED")
 
 def user_authentication(card):
         
-        GPIO.output(2,True)
+        
         global user_1_state
         global user_2_state
         print("Woo a card "+card)
         
+        if((card != str(USER_1)) and (card != str(USER_2))):
+            GPIO.output(2,False)#opto
+            GPIO.output(3,False)#usb
+            GPIO.output(17,False)#user 2 led
+            GPIO.output(4,False)#user1 led
+            print("DISABLED")
+            GPIO.output(14,False)#device enable light
+            user_1_state =0
+            user_2_state =0
+            
         #check user 1
         if ((  user_1_state == 0 ) and (card== str(USER_1) )):
-            GPIO.output(4,True)
+            GPIO.output(4,True)#user 1 led
             user_1_state=1
             print("USER 1")
 		#check user 2
         if (( user_2_state == 0 ) and (card== str(USER_2) )):
-            GPIO.output(17,True)
+            GPIO.output(17,True)#user 2 led
             user_2_state=1
             print("USER 2")
             
         if(user_2_state):
-            GPIO.output(2,True)
-            GPIO.output(3,False)
+            GPIO.output(2,True)#opto
+            GPIO.output(3,True)#usb
             print("ACTIVATED")
-            GPIO.output(14,True)
+            GPIO.output(14,True)#device enable light
             
         
-        if((card != str(USER_1)) and (card != str(USER_2))):
-            GPIO.output(2,False)
-            GPIO.output(3,True)
-            GPIO.output(17,False)
-            print("DISABLED")
-            GPIO.output(14,False)
-            user_1_state =0
-            user_2_state =0
+        
             
 while (True):
     card =input()
