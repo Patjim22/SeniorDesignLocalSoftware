@@ -1,93 +1,90 @@
 #!/usr/bin/python3 -u
+                                                # this tells the Pi to use Python3 instead of Python 2
 
 # https://stackoverflow.com/questions/19732978/how-can-i-get-a-string-from-hid-device-in-python-with-evdev
-
+                                                # location at which teh keycard reader code was found
 import evdev
 import RPi.GPIO as GPIO
 from evdev import *
 import time 
+
 #dev =evdev.InputDevice('/dev/input/by-id/usb-SM_SM-2D_PRODUCT_HID_KBW_APP-000000000-event-kbd')
 dev =evdev.InputDevice('/dev/input/by-id/usb-IDTECH_IDTECH_MiniMag_II_USB-HID_Keyboard_Reader-event-kbd')
-dev.grab()
+dev.grab()                                      # Grab provides exclusive access to the device 
 
-
-# for event in dev.read_loop():
-#     if event.type == ecodes.EV_KEY:
-#         print(categorize(event))
-# Suppresses warning messages from output.
-GPIO.setwarnings(False)
-	
-	# This tells the library to use the GPIO numbers and not the
-	# header pin numbers. If you want to use the pin numbers in
-	# the code below, use GPIO.setmode(GPIO.BOARD)
-GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)                         # Suppresses warning messages from output.
+GPIO.setmode(GPIO.BCM)                          # Use GPIO Pin numbers instead on Board pin numbers
+#GPIO.setmode(GPIO.Board)
     
-    #add all used gpio pins for configuration
-channel_list = (2,3,4,17,22,27,14) #pin 2 needs changed
-    # Sets up GPIO 2 (Pin 3 as an output) 
+    # Add all used gpio pins for configuration
+channel_list = (2,3,4,17,22,27,14)              # Pin 2 needs changed
+    # Sets all GPIO pins in the chanel list as an output
 GPIO.setup(channel_list, GPIO.OUT)
 GPIO.output(channel_list,GPIO.LOW)
-    
-    # Define constants and variables
 
+    # Define constants and variables
 USER_1=200338060
 USER_2=200248706
    
-user_1_state=0
-user_2_state=0
+user_1_state = 0
+user_2_state = 0
     
-    # Set power pin to on
-GPIO.output(27,True)
-    # Set switch pin to default
-GPIO.output(3,False)#usb
-GPIO.output(2,False)#opto
+GPIO.output(27,True)                            # Set power pin to on
+    # Set switch pin to defaults
+GPIO.output(3,False)                            # USB
+GPIO.output(2,False)                            # Opto-Isolator
 
     # Give scanner time to get online
 print("INITIALIZED")
 
+    # Main section of code used for authentication:
 def user_authentication(card):
-        
         
         global user_1_state
         global user_2_state
+        # why are the globals defined inside the function?
+        # when we test this, we should move around the functions and definitions 
+
         print("Woo a card "+card)
         
         if((card != str(USER_1)) and (card != str(USER_2))):
-            GPIO.output(2,False)#opto
-            GPIO.output(3,False)#usb
-            GPIO.output(17,False)#user 2 led
-            GPIO.output(4,False)#user1 led
+            GPIO.output(2,False)                # Opto
+            GPIO.output(3,False)                # USB
+            GPIO.output(17,False)               # User 2 led
+            GPIO.output(4,False)                # User1 led
             print("DISABLED")
-            GPIO.output(14,False)#device enable light
+            GPIO.output(14,False)               # Device enable light
             user_1_state =0
             user_2_state =0
             
         #check user 1
         if ((  user_1_state == 0 ) and (card== str(USER_1) )):
-            GPIO.output(4,True)#user 1 led
+            GPIO.output(4,True)                 # User 1 led
             user_1_state=1
             print("USER 1")
 		#check user 2
         if (( user_2_state == 0 ) and (card== str(USER_2) )):
-            GPIO.output(17,True)#user 2 led
+            GPIO.output(17,True)                # User 2 led
             user_2_state=1
             print("USER 2")
             
         if(user_2_state):
-            GPIO.output(2,True)#opto
-            GPIO.output(3,True)#usb
+            GPIO.output(2,True)                 # Opto
+            GPIO.output(3,True)                 # USB
             print("ACTIVATED")
-            GPIO.output(14,True)#device enable light
+            GPIO.output(14,True)                # Device enable light
             
         
-        
-            
+
+    # Test code for keyboard input instead of the keycard reader
 while (True):
     card =input()
     print(card)
     user_authentication(card)
 
 
+
+    # ASCII Definitions for the Keycard Reader interpretation:
 scancodes = { 
     # Scancode: ASCIICode 
     0: None, 1: u'ESC', 2: u'1', 3: u'2', 4: u'3', 5: u'4', 6: u'5', 7: u'6', 8: u'7', 9: u'8', 
@@ -110,11 +107,8 @@ capscodes = {
 x = '' 
 caps = False 
 
-#grab provides exclusive access to the device 
 
-
-#loop 
-
+    # Loop for the Keycard Reader:
 # for event in dev.read_loop(): 
 #     if event.type == ecodes.EV_KEY: 
 #      data = categorize(event) # Save the event temporarily to introspect it 
