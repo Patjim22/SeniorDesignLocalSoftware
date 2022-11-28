@@ -121,7 +121,7 @@ def user_authentication(card):
                 print("ACTIVATED")
                 GPIO.output(14,True)                # Device enable light
                 endTime = time.time()+countDownIncrementer
-                print("use time: " + str((endTime-time.time())/60))
+                print("use time: " + str((endTime-time.time())/60) +"minutes")
            
         else:#outside of normal hours a buddy is required
             print("A buddy is required")
