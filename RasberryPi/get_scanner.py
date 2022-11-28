@@ -3,10 +3,36 @@
 
 # https://stackoverflow.com/questions/19732978/how-can-i-get-a-string-from-hid-device-in-python-with-evdev
                                                 # location at which teh keycard reader code was found
+from tkinter import *
+from tkinter import font
 import evdev
 import RPi.GPIO as GPIO
 from evdev import *
 import time 
+
+#variables for countdown timer
+global start 
+global endTime
+global countDownText
+countDownIncrementer = 1*60 #number of minutes wanted goes where the 1 is
+
+
+win = Tk()
+
+myFont = font.Font(family = 'Helvetica', size = 84, weight = 'bold')
+
+ #config column rows and col
+Grid.rowconfigure(win,0, weight=1)
+Grid.rowconfigure(win,1, weight=1)
+Grid.columnconfigure(win,0,weight=1)
+ 
+win.title("Access Control")
+win.geometry('800x480')
+countDownText = "count"
+countDown = Label(win,text= countDownText ,anchor=CENTER,font= myFont)
+countDown.pack()
+
+countDown.grid(row=0,column=0, sticky="nsew")
 
 #dev =evdev.InputDevice('/dev/input/by-id/usb-SM_SM-2D_PRODUCT_HID_KBW_APP-000000000-event-kbd')
 dev =evdev.InputDevice('/dev/input/by-id/usb-IDTECH_IDTECH_MiniMag_II_USB-HID_Keyboard_Reader-event-kbd')
@@ -39,6 +65,18 @@ GPIO.output(2,False)                            # Opto-Isolator
     # Give scanner time to get online
 print("INITIALIZED")
 
+def countdown(): #function for updating screen with countdown timer
+	currentTime =endTime-time.time()
+	#print(int(currentTime/60),":", int(currentTime%60))
+	countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
+	#countDown.config(text=str(int(currentTime))+":")
+	#print(str(time.localtime().tm_hour) +":"+str(time.localtime().tm_min))
+	
+	
+	#time.sleep(1)
+	win.update()
+	win.after(1000,)
+
     # Main section of code used for authentication:
 def user_authentication(card):
         
@@ -60,10 +98,8 @@ def user_authentication(card):
             user_2_state=1
             print("USER 2")
         elif(card ==BackUp_USER ):
-            GPIO.output(2,True)                 # Opto
-            GPIO.output(3,True)                 # USB
-            print("ACTIVATED")
-            GPIO.output(14,True)                # Device enable light
+            user_1_state =1
+            user_2_state =1
         else:#((card != str(USER_1)) and (card != str(USER_2))):
             GPIO.output(2,False)                # Opto
             GPIO.output(3,False)                # USB
@@ -80,7 +116,8 @@ def user_authentication(card):
                 GPIO.output(2,True)                 # Opto
                 GPIO.output(3,True)                 # USB
                 print("ACTIVATED")
-                GPIO.output(14,True)                # Device enable light
+                GPIO.output(14,True)                # Device enable lighto
+                endTime = time.time()+countDownIncrementer
             else:
                 print("another user is required")
         else:
@@ -89,6 +126,7 @@ def user_authentication(card):
                 GPIO.output(3,True)                 # USB
                 print("ACTIVATED")
                 GPIO.output(14,True)                # Device enable light
+                endTime = time.time()+countDownIncrementer
 
 
     # Test code for keyboard input instead of the keycard reader
@@ -142,5 +180,6 @@ for event in dev.read_loop():
       if(data.scancode == 28): 
        print (x)   # Print it all out! 
        user_authentication(x)
+       countdown()
        x = ''
 
