@@ -183,6 +183,7 @@ for event in dev.read_loop():
        user_authentication(x)
        if(endTime):
         win.after(1000,)
+        print("windowUpdate")
         countdown()
        x = ''
 
