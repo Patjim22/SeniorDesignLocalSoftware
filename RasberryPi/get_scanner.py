@@ -23,8 +23,10 @@ GPIO.setup(channel_list, GPIO.OUT)
 GPIO.output(channel_list,GPIO.LOW)
 
     # Define constants and variables
-USER_1=200338060
-USER_2=200248706
+USER_1=100019744 #visitor 1 id
+USER_2=100019747 #visitor 4 id
+
+BackUp_USER= 200248706
    
 user_1_state = 0
 user_2_state = 0
@@ -67,20 +69,35 @@ def user_authentication(card):
             GPIO.output(17,True)                # User 2 led
             user_2_state=1
             print("USER 2")
-            
-        if(user_2_state):
+
+        if(BackUp_USER ):
             GPIO.output(2,True)                 # Opto
             GPIO.output(3,True)                 # USB
             print("ACTIVATED")
             GPIO.output(14,True)                # Device enable light
-            
         
+        if(time.localtime().tm_hour>=17):
+            print("Two users are required")
+            if(user_1_state and user_2_state):
+                GPIO.output(2,True)                 # Opto
+                GPIO.output(3,True)                 # USB
+                print("ACTIVATED")
+                GPIO.output(14,True)                # Device enable light
+            else:
+                print("another user is required")
+        else:
+            if(user_1_state):
+                GPIO.output(2,True)                 # Opto
+                GPIO.output(3,True)                 # USB
+                print("ACTIVATED")
+                GPIO.output(14,True)                # Device enable light
+
 
     # Test code for keyboard input instead of the keycard reader
-while (True):
-    card =input()
-    print(card)
-    user_authentication(card)
+# while (True):
+#     card =input()
+#     print(card)
+#     user_authentication(card)
 
 
 
@@ -109,23 +126,23 @@ caps = False
 
 
     # Loop for the Keycard Reader:
-# for event in dev.read_loop(): 
-#     if event.type == ecodes.EV_KEY: 
-#      data = categorize(event) # Save the event temporarily to introspect it 
-#      if data.scancode == 42: 
-#       if data.keystate == 1: 
-#        caps = True 
-#       if data.keystate == 0: 
-#        caps = False 
-#      if data.keystate == 1: # Down events only 
-#       if caps: 
-#        key_lookup = u'{}'.format(capscodes.get(data.scancode)) or u'UNKNOWN:[{}]'.format(data.scancode) # Lookup or return UNKNOWN:XX 
-#       else: 
-#        key_lookup = u'{}'.format(scancodes.get(data.scancode)) or u'UNKNOWN:[{}]'.format(data.scancode) # Lookup or return UNKNOWN:XX 
-#       if (data.scancode != 42) and (data.scancode != 28): 
-#        x += key_lookup 
-#       if(data.scancode == 28): 
-#        print (x)   # Print it all out! 
-#        user_authentication(x)
-#        x = ''
+for event in dev.read_loop(): 
+    if event.type == ecodes.EV_KEY: 
+     data = categorize(event) # Save the event temporarily to introspect it 
+     if data.scancode == 42: 
+      if data.keystate == 1: 
+       caps = True 
+      if data.keystate == 0: 
+       caps = False 
+     if data.keystate == 1: # Down events only 
+      if caps: 
+       key_lookup = u'{}'.format(capscodes.get(data.scancode)) or u'UNKNOWN:[{}]'.format(data.scancode) # Lookup or return UNKNOWN:XX 
+      else: 
+       key_lookup = u'{}'.format(scancodes.get(data.scancode)) or u'UNKNOWN:[{}]'.format(data.scancode) # Lookup or return UNKNOWN:XX 
+      if (data.scancode != 42) and (data.scancode != 28): 
+       x += key_lookup 
+      if(data.scancode == 28): 
+       print (x)   # Print it all out! 
+       user_authentication(x)
+       x = ''
 
