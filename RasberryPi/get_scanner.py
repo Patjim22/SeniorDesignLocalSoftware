@@ -26,7 +26,7 @@ GPIO.output(channel_list,GPIO.LOW)
 USER_1=100019744 #visitor 1 id
 USER_2=100019747 #visitor 4 id
 
-BackUp_USER= 200248706
+BackUp_USER= "200248706"
    
 user_1_state = 0
 user_2_state = 0
@@ -59,7 +59,7 @@ def user_authentication(card):
             GPIO.output(17,True)                # User 2 led
             user_2_state=1
             print("USER 2")
-        elif(BackUp_USER ):
+        elif(card ==BackUp_USER ):
             GPIO.output(2,True)                 # Opto
             GPIO.output(3,True)                 # USB
             print("ACTIVATED")
