@@ -162,7 +162,8 @@ x = ''
 caps = False 
 
 while(1):
- countdown()
+ if(endTime>0):
+    countdown()
     # Loop for the Keycard Reader:
  for event in dev.read_loop(): 
     
