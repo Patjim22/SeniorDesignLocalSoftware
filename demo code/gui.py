@@ -60,7 +60,7 @@ def countdown():
 	#print(int(currentTime/60),":", int(currentTime%60))
 	countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
 	#countDown.config(text=str(int(currentTime))+":")
-	print(str(time.localtime().tm_hour) +":"+str(time.localtime().tm_min))
+	#print(str(time.localtime().tm_hour) +":"+str(time.localtime().tm_min))
 	
 	
 	#time.sleep(1)
