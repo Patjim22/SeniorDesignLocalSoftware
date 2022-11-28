@@ -182,6 +182,7 @@ for event in dev.read_loop():
        print (x)   # Print it all out! 
        user_authentication(x)
        if(endTime):
+        win.after(1000,)
         countdown()
        x = ''
 
