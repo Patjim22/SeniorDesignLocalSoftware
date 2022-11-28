@@ -114,7 +114,7 @@ def user_authentication(card):
             user_1_state =0
             user_2_state =0
         
-        if(time.localtime().tm_hour<=17 and time.localtime().tm_hour >=8):#between 8am and 5pm only 1 user is needed
+        if(time.localtime().tm_hour<17 and time.localtime().tm_hour >=8):#between 8am and 5pm only 1 user is needed
             if(user_1_state):
                 GPIO.output(2,True)                 # Opto
                 GPIO.output(3,True)                 # USB
