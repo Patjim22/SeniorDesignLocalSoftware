@@ -196,8 +196,9 @@ loop = asyncio.get_event_loop()
 #loop.run_until_complete(helper(dev))
 
 async def main():
-    L= await asyncio.gather(helper(dev),countdown())
-    countdown()
+    while(1):
+        L= await asyncio.gather(helper(dev),countdown())
+        countdown()
  
 asyncio.run(main())
  
