@@ -163,6 +163,7 @@ caps = False
 
     # Loop for the Keycard Reader:
 for event in dev.read_loop(): 
+    endTime = endTime
     if event.type == ecodes.EV_KEY: 
      data = categorize(event) # Save the event temporarily to introspect it 
      if data.scancode == 42: 
