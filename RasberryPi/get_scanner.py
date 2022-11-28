@@ -162,9 +162,7 @@ x = ''
 caps = False 
 
 while(1):
- if(endTime>0):
-    countdown()
-    # Loop for the Keycard Reader:
+ # Loop for the Keycard Reader:
  for event in dev.read_loop(): 
     
      if event.type == ecodes.EV_KEY: 
@@ -187,4 +185,7 @@ while(1):
        
        
      x = ''
+ if(endTime>0):
+    countdown()
+    
 
