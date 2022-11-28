@@ -164,7 +164,6 @@ caps = False
 while(1):
  # Loop for the Keycard Reader:
  for event in dev.read_loop(): 
-    
      if event.type == ecodes.EV_KEY: 
       data = categorize(event) # Save the event temporarily to introspect it 
       if data.scancode == 42: 
@@ -182,9 +181,7 @@ while(1):
        if(data.scancode == 28): 
         print (x)   # Print it all out! 
         user_authentication(x)
-       
-       
-     x = ''
+        x = ''
  if(endTime>0):
     countdown()
     
