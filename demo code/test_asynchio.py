@@ -65,7 +65,7 @@ print("INITIALIZED")
 
 async def countdown(): #function for updating screen with countdown timer
     currentTime =endTime-time.time()
-	#print(int(currentTime/60),":", int(currentTime%60))
+    print(int(currentTime/60),":", int(currentTime%60))
     if(currentTime>0):countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
     else:
         countDown.config(text="NO USER")
