@@ -66,16 +66,18 @@ GPIO.output(2,False)                            # Opto-Isolator
 print("INITIALIZED")
 
 def countdown(): #function for updating screen with countdown timer
-	currentTime =endTime-time.time()
+    currentTime =endTime-time.time()
 	#print(int(currentTime/60),":", int(currentTime%60))
-	countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
+    if(currentTime>0):countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
+    else:
+        countDown.config(text="NO USER")
 	#countDown.config(text=str(int(currentTime))+":")
 	#print(str(time.localtime().tm_hour) +":"+str(time.localtime().tm_min))
 	
 	
 	#time.sleep(1)
-	win.update()
-	win.after(1000,)
+    win.update()
+    win.after(1000,)
 
     # Main section of code used for authentication:
 def user_authentication(card):
@@ -163,6 +165,7 @@ x = ''
 caps = False 
 
 while(1):
+ countdown()
  # Loop for the Keycard Reader:
  for event in dev.read_loop(): 
      if event.type == ecodes.EV_KEY: 
@@ -183,7 +186,6 @@ while(1):
         print (x)   # Print it all out! 
         user_authentication(x)
         x = ''
- if(endTime>0):
-    countdown()
+ 
     
 
