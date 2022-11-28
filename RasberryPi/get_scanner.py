@@ -82,6 +82,7 @@ def user_authentication(card):
         
         global user_1_state
         global user_2_state
+        global endTime
         # why are the globals defined inside the function?
         # when we test this, we should move around the functions and definitions 
 
