@@ -63,7 +63,7 @@ GPIO.output(2,False)                            # Opto-Isolator
     # Give scanner time to get online
 print("INITIALIZED")
 
-def countdown(): #function for updating screen with countdown timer
+async def countdown(): #function for updating screen with countdown timer
     currentTime =endTime-time.time()
 	#print(int(currentTime/60),":", int(currentTime%60))
     if(currentTime>0):countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
@@ -193,9 +193,10 @@ async def helper(dev):
         x = ''
 
 loop = asyncio.get_event_loop()
-loop.run_until_complete(helper(dev))
-while(1):
-    countdown()
+#loop.run_until_complete(helper(dev))
+
+async def main():
+    L= await asyncio.gather(helper(dev),countdown())
  
 
  
