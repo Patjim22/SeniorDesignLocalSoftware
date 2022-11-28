@@ -12,7 +12,7 @@ import time
 
 #variables for countdown timer
 global start 
-global endTime
+global endTime 
 global countDownText
 countDownIncrementer = 1*60 #number of minutes wanted goes where the 1 is
 
@@ -180,6 +180,7 @@ for event in dev.read_loop():
       if(data.scancode == 28): 
        print (x)   # Print it all out! 
        user_authentication(x)
-       countdown()
+       if(endTime):
+        countdown()
        x = ''
 
