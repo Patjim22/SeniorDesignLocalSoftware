@@ -109,12 +109,22 @@ def user_authentication(card):
             GPIO.output(17,False)               # User 2 led
             GPIO.output(4,False)                # User1 led
             print("DISABLED")
+            print("Invalid user")
             GPIO.output(14,False)               # Device enable light
             user_1_state =0
             user_2_state =0
         
-        if(time.localtime().tm_hour>=17):
-            print("Two users are required")
+        if(time.localtime().tm_hour<=17 and time.localtime().tm_hour >=8):#between 8am and 5pm only 1 user is needed
+            if(user_1_state):
+                GPIO.output(2,True)                 # Opto
+                GPIO.output(3,True)                 # USB
+                print("ACTIVATED")
+                GPIO.output(14,True)                # Device enable light
+                endTime = time.time()+countDownIncrementer
+                print("use time: " + str((endTime-time.time())/60))
+           
+        else:#outside of normal hours a buddy is required
+            print("A buddy is required")
             if(user_1_state and user_2_state):
                 GPIO.output(2,True)                 # Opto
                 GPIO.output(3,True)                 # USB
@@ -123,14 +133,6 @@ def user_authentication(card):
                 endTime = time.time()+countDownIncrementer
             else:
                 print("another user is required")
-        else:
-            if(user_1_state):
-                GPIO.output(2,True)                 # Opto
-                GPIO.output(3,True)                 # USB
-                print("ACTIVATED")
-                GPIO.output(14,True)                # Device enable light
-                endTime = time.time()+countDownIncrementer
-                print("endTime: " + str(endTime))
 
 
     # Test code for keyboard input instead of the keycard reader
@@ -167,7 +169,7 @@ caps = False
 while(1):
  countdown()
  # Loop for the Keycard Reader:
- for event in dev.read_loop(): 
+ for event in dev.read_loop():
      if event.type == ecodes.EV_KEY: 
       data = categorize(event) # Save the event temporarily to introspect it 
       if data.scancode == 42: 
