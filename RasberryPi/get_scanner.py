@@ -49,7 +49,22 @@ def user_authentication(card):
 
         print("Woo a card "+card)
         
-        if((card != str(USER_1)) and (card != str(USER_2))):
+         #check user 1
+        if ((  user_1_state == 0 ) and (card== str(USER_1) )):
+            GPIO.output(4,True)                 # User 1 led
+            user_1_state=1
+            print("USER 1")
+		#check user 2
+        elif (( user_2_state == 0 ) and (card== str(USER_2) )):
+            GPIO.output(17,True)                # User 2 led
+            user_2_state=1
+            print("USER 2")
+        elif(BackUp_USER ):
+            GPIO.output(2,True)                 # Opto
+            GPIO.output(3,True)                 # USB
+            print("ACTIVATED")
+            GPIO.output(14,True)                # Device enable light
+        else:#((card != str(USER_1)) and (card != str(USER_2))):
             GPIO.output(2,False)                # Opto
             GPIO.output(3,False)                # USB
             GPIO.output(17,False)               # User 2 led
@@ -58,23 +73,6 @@ def user_authentication(card):
             GPIO.output(14,False)               # Device enable light
             user_1_state =0
             user_2_state =0
-            
-        #check user 1
-        if ((  user_1_state == 0 ) and (card== str(USER_1) )):
-            GPIO.output(4,True)                 # User 1 led
-            user_1_state=1
-            print("USER 1")
-		#check user 2
-        if (( user_2_state == 0 ) and (card== str(USER_2) )):
-            GPIO.output(17,True)                # User 2 led
-            user_2_state=1
-            print("USER 2")
-
-        if(BackUp_USER ):
-            GPIO.output(2,True)                 # Opto
-            GPIO.output(3,True)                 # USB
-            print("ACTIVATED")
-            GPIO.output(14,True)                # Device enable light
         
         if(time.localtime().tm_hour>=17):
             print("Two users are required")
