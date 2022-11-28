@@ -170,6 +170,8 @@ dev.grab()                                      # Grab provides exclusive access
 
 
 async def helper(dev):
+    global caps
+    global x
     async for event in dev.async_read_loop():
      if event.type == ecodes.EV_KEY: 
       data = categorize(event) # Save the event temporarily to introspect it 
@@ -189,6 +191,7 @@ async def helper(dev):
         print (x)   # Print it all out! 
         user_authentication(x)
         x = ''
+
 loop = asyncio.get_event_loop()
 loop.run_until_complete(helper(dev))
 while(1):
