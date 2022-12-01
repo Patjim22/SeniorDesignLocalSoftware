@@ -44,6 +44,20 @@ GPIO.setmode(GPIO.BCM)                          # Use GPIO Pin numbers instead o
 #GPIO.setmode(GPIO.Board)
     
     # Add all used gpio pins for configuration
+    #22 is green LED device On
+    #27 user 1 #17 user 2 yellow LEDs
+    #4 and 3  RED LEDS
+    #2 control opto
+    #14 usb sel
+DEVICEON =22
+USER1LED =27
+USER2LED=17
+REDLED1 =4
+REDLED2 =3
+CONTROLOPTO =2
+USBSEL =14
+
+
 channel_list = (2,3,4,17,22,27,14)              # Pin 2 needs changed
     # Sets all GPIO pins in the chanel list as an output
 GPIO.setup(channel_list, GPIO.OUT)
@@ -58,10 +72,10 @@ BackUp_USER= "200248706"
 user_1_state = 0
 user_2_state = 0
     
-GPIO.output(27,True)                            # Set power pin to on
+GPIO.output(DEVICEON,True)                            # Set power pin to on
     # Set switch pin to defaults
-GPIO.output(3,False)                            # USB
-GPIO.output(2,False)                            # Opto-Isolator
+GPIO.output(USBSEL,False)                            # USB
+GPIO.output(CONTROLOPTO,False)                            # Opto-Isolator
 
     # Give scanner time to get online
 print("INITIALIZED")
@@ -93,44 +107,44 @@ def user_authentication(card):
         
          #check user 1
         if ((  user_1_state == 0 ) and (card== str(USER_1) )):
-            GPIO.output(4,True)                 # User 1 led
+            GPIO.output(USER1LED,True)                 # User 1 led
             user_1_state=1
             print("USER 1")
 		#check user 2
         elif (( user_2_state == 0 ) and (card== str(USER_2) )):
-            GPIO.output(17,True)                # User 2 led
+            GPIO.output(USER2LED,True)                # User 2 led
             user_2_state=1
             print("USER 2")
         elif(card ==BackUp_USER ):
             user_1_state =1
             user_2_state =1
         else:#((card != str(USER_1)) and (card != str(USER_2))):
-            GPIO.output(2,False)                # Opto
-            GPIO.output(3,False)                # USB
-            GPIO.output(17,False)               # User 2 led
-            GPIO.output(4,False)                # User1 led
+            GPIO.output(CONTROLOPTO,False)                # Opto
+            GPIO.output(USBSEL,False)                # USB
+            GPIO.output(USER2LED,False)               # User 2 led
+            GPIO.output(USER1LED,False)                # User1 led
             print("DISABLED")
             print("Invalid user")
-            GPIO.output(14,False)               # Device enable light
+            GPIO.output(DEVICEON,False)               # Device enable light
             user_1_state =0
             user_2_state =0
         
         if(time.localtime().tm_hour<17 and time.localtime().tm_hour >=8):#between 8am and 5pm only 1 user is needed
             if(user_1_state):
-                GPIO.output(2,True)                 # Opto
-                GPIO.output(3,True)                 # USB
+                GPIO.output(CONTROLOPTO,True)                 # Opto
+                GPIO.output(USBSEL,True)                 # USB
                 print("ACTIVATED")
-                GPIO.output(14,True)                # Device enable light
+                GPIO.output(DEVICEON,True)                # Device enable light
                 endTime = time.time()+countDownIncrementer
                 print("use time: " + str((endTime-time.time())/60) +"minutes")
            
         else:#outside of normal hours a buddy is required
             print("A buddy is required")
             if(user_1_state and user_2_state):
-                GPIO.output(2,True)                 # Opto
-                GPIO.output(3,True)                 # USB
+                GPIO.output(CONTROLOPTO,True)                 # Opto
+                GPIO.output(USBSEL,True)                 # USB
                 print("ACTIVATED")
-                GPIO.output(14,True)                # Device enable lighto
+                GPIO.output(DEVICEON,True)                # Device enable lighto
                 endTime = time.time()+countDownIncrementer
             else:
                 print("another user is required")
