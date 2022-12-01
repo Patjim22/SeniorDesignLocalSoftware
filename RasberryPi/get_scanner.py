@@ -56,12 +56,14 @@ REDLED1 =4
 REDLED2 =3
 CONTROLOPTO =2
 USBSEL =14
+RESETBUTTON = 18
 
 
 channel_list = (2,3,4,17,22,27,14)              # Pin 2 needs changed
     # Sets all GPIO pins in the chanel list as an output
-GPIO.setup(channel_list, GPIO.OUT)
-GPIO.output(channel_list,GPIO.LOW)
+GPIO.setup(channel_list, GPIO.OUT, initial =GPIO.LOW)
+#GPIO.output(channel_list,GPIO.LOW)
+GPIO.setup(RESETBUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)#sets the reset to a input with a pull up resistor
 
     # Define constants and variables
 USER_1=100019744 #visitor 1 id
@@ -119,6 +121,17 @@ def user_authentication(card):
             user_1_state =1
             user_2_state =1
         else:#((card != str(USER_1)) and (card != str(USER_2))):
+            GPIO.output(CONTROLOPTO,False)                # Opto
+            GPIO.output(USBSEL,False)                # USB
+            GPIO.output(USER2LED,False)               # User 2 led
+            GPIO.output(USER1LED,False)                # User1 led
+            print("DISABLED")
+            print("Invalid user")
+            GPIO.output(DEVICEON,False)               # Device enable light
+            user_1_state =0
+            user_2_state =0
+        
+        if(RESETBUTTON==0):
             GPIO.output(CONTROLOPTO,False)                # Opto
             GPIO.output(USBSEL,False)                # USB
             GPIO.output(USER2LED,False)               # User 2 led
