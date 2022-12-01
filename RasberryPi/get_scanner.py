@@ -72,7 +72,7 @@ BackUp_USER= "200248706"
 user_1_state = 0
 user_2_state = 0
     
-GPIO.output(DEVICEON,True)                            # Set power pin to on
+GPIO.output(DEVICEON,FALSE)                            # Set power pin to on
     # Set switch pin to defaults
 GPIO.output(USBSEL,False)                            # USB
 GPIO.output(CONTROLOPTO,False)                            # Opto-Isolator
