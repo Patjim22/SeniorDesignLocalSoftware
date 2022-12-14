@@ -15,18 +15,18 @@ dev.grab()
 #     if event.type == ecodes.EV_KEY:
 #         print(categorize(event))
 # Suppresses warning messages from output.
-GPIO.setwarnings(False)
+# GPIO.setwarnings(False)
 	
 	# This tells the library to use the GPIO numbers and not the
 	# header pin numbers. If you want to use the pin numbers in
 	# the code below, use GPIO.setmode(GPIO.BOARD)
-GPIO.setmode(GPIO.BCM)
+# GPIO.setmode(GPIO.BCM)
     
-    #add all used gpio pins for configuration
-channel_list = (2,3,4,17,22,27,14) #pin 2 needs changed
-    # Sets up GPIO 2 (Pin 3 as an output) 
-GPIO.setup(channel_list, GPIO.OUT)
-GPIO.output(channel_list,GPIO.LOW)
+#     #add all used gpio pins for configuration
+# channel_list = (2,3,4,17,22,27,14) #pin 2 needs changed
+#     # Sets up GPIO 2 (Pin 3 as an output) 
+# GPIO.setup(channel_list, GPIO.OUT)
+# GPIO.output(channel_list,GPIO.LOW)
     
     # Define constants and variables
 
@@ -37,10 +37,10 @@ user_1_state=0
 user_2_state=0
     
     # Set power pin to on
-GPIO.output(27,True)
-    # Set switch pin to default
-GPIO.output(3,False)#usb
-GPIO.output(2,False)#opto
+# GPIO.output(27,True)
+#     # Set switch pin to default
+# GPIO.output(3,False)#usb
+# GPIO.output(2,False)#opto
 
     # Give scanner time to get online
 print("INITIALIZED")
@@ -115,23 +115,23 @@ caps = False
 
 #loop 
 
-# for event in dev.read_loop(): 
-#     if event.type == ecodes.EV_KEY: 
-#      data = categorize(event) # Save the event temporarily to introspect it 
-#      if data.scancode == 42: 
-#       if data.keystate == 1: 
-#        caps = True 
-#       if data.keystate == 0: 
-#        caps = False 
-#      if data.keystate == 1: # Down events only 
-#       if caps: 
-#        key_lookup = u'{}'.format(capscodes.get(data.scancode)) or u'UNKNOWN:[{}]'.format(data.scancode) # Lookup or return UNKNOWN:XX 
-#       else: 
-#        key_lookup = u'{}'.format(scancodes.get(data.scancode)) or u'UNKNOWN:[{}]'.format(data.scancode) # Lookup or return UNKNOWN:XX 
-#       if (data.scancode != 42) and (data.scancode != 28): 
-#        x += key_lookup 
-#       if(data.scancode == 28): 
-#        print (x)   # Print it all out! 
-#        user_authentication(x)
-#        x = ''
+for event in dev.read_loop(): 
+    if event.type == ecodes.EV_KEY: 
+     data = categorize(event) # Save the event temporarily to introspect it 
+     if data.scancode == 42: 
+      if data.keystate == 1: 
+       caps = True 
+      if data.keystate == 0: 
+       caps = False 
+     if data.keystate == 1: # Down events only 
+      if caps: 
+       key_lookup = u'{}'.format(capscodes.get(data.scancode)) or u'UNKNOWN:[{}]'.format(data.scancode) # Lookup or return UNKNOWN:XX 
+      else: 
+       key_lookup = u'{}'.format(scancodes.get(data.scancode)) or u'UNKNOWN:[{}]'.format(data.scancode) # Lookup or return UNKNOWN:XX 
+      if (data.scancode != 42) and (data.scancode != 28): 
+       x += key_lookup 
+      if(data.scancode == 28): 
+       print (x)   # Print it all out! 
+       user_authentication(x)
+       x = ''
 

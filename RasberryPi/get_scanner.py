@@ -69,7 +69,7 @@ GPIO.setup(RESETBUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)#sets the reset to a i
 USER_1=100019744 #visitor 1 id
 USER_2=100019747 #visitor 4 id
 
-BackUp_USER= "200248706"
+BackUp_USER= {200248706, 200289830}
    
 user_1_state = 0
 user_2_state = 0
@@ -117,7 +117,7 @@ def user_authentication(card):
             GPIO.output(USER2LED,True)                # User 2 led
             user_2_state=1
             print("USER 2")
-        elif(card ==BackUp_USER ):
+        elif card in BackUp_USER :
             user_1_state =1
             user_2_state =1
         else:#((card != str(USER_1)) and (card != str(USER_2))):
@@ -143,7 +143,7 @@ def user_authentication(card):
             user_2_state =0
         
         if(time.localtime().tm_hour<17 and time.localtime().tm_hour >=8):#between 8am and 5pm only 1 user is needed
-            if(user_1_state):
+            if(user_1_state or user_2_state):
                 GPIO.output(CONTROLOPTO,True)                 # Opto
                 GPIO.output(USBSEL,True)                 # USB
                 print("ACTIVATED")
