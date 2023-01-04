@@ -5,6 +5,7 @@
                                                 # location at which teh keycard reader code was found
 from tkinter import *
 from tkinter import font
+from sql_connection 
 import asyncio
 import evdev
 import RPi.GPIO as GPIO
@@ -69,7 +70,7 @@ GPIO.setup(RESETBUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)#sets the reset to a i
 USER_1=100019744 #visitor 1 id
 USER_2=100019747 #visitor 4 id
 
-BackUp_USER= {200248706, 200289830}
+
    
 user_1_state = 0
 user_2_state = 0
