@@ -7,7 +7,7 @@ import RPi.GPIO as GPIO
 from evdev import *
 import time 
 #dev =evdev.InputDevice('/dev/input/by-id/usb-SM_SM-2D_PRODUCT_HID_KBW_APP-000000000-event-kbd')
-dev =evdev.InputDevice('/dev/input/by-id/usb-IDTECH_IDTECH_MiniMag_II_USB-HID_Keyboard_Reader-event-kbd')
+dev =evdev.InputDevice('/dev/input/')
 dev.grab()
 
 
