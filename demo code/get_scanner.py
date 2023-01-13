@@ -132,6 +132,6 @@ for event in dev.read_loop():
        x += key_lookup 
       if(data.scancode == 28): 
        print (x)   # Print it all out! 
-       user_authentication(x)
+       #user_authentication(x)
        x = ''
 
