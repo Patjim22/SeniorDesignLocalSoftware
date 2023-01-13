@@ -1,3 +1,4 @@
+import sys
 from tkinter import *
 from tkinter import font
 import time
@@ -65,14 +66,10 @@ def countdown():
 	
 	#time.sleep(1)
 	win.update()
-	win.after(1000,)
+	
 
 while(time.time() <= endTime):
 	countdown()
-	for line in sys.stdin:
-		if  'q' == line.rstrip():
-			break
-		print(line)
-	print("Exit")
+
 
 
