@@ -18,16 +18,6 @@ countDownIncrementer = countDownMinutes*60 #number of minutes wanted goes where 
 
 
 
-def ledON():
-	print("LED button pressed")
-	start = time.ctime(time.time())
-	print(start)
-	#if GPIO.input(40) :
-	#	GPIO.output(40,GPIO.LOW)
-	ledButton["text"] = "LED ON"
-	#else:
-	#	GPIO.output(40,GPIO.HIGH)
-	#ledButton["text"] = "LED OFF"
 
 def exitProgram():
 	print("Exit Button pressed")
@@ -37,7 +27,7 @@ def exitProgram():
 def countdown():
 	currentTime =endTime-time.time()
 	#print(int(currentTime/60),":", int(currentTime%60))
-	countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
+	countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)) +" minutes remaining")
 	#countDown.config(text=str(int(currentTime))+":")
 	#print(str(time.localtime().tm_hour) +":"+str(time.localtime().tm_min))
 	
@@ -53,26 +43,44 @@ def configurePi():
 
 win = Tk()
 
-myFont = font.Font(family = 'Helvetica', size = 84, weight = 'bold')
+myFont = font.Font(family = 'Helvetica', size = 30, weight = 'bold')
 #config column rows and col
 Grid.rowconfigure(win,0, weight=1)
 Grid.rowconfigure(win,1, weight=1)
+Grid.rowconfigure(win,2,weight=1)
+Grid.rowconfigure(win,3,weight=1)
 Grid.columnconfigure(win,0,weight=1)
  
 win.title("Access Control")#window name
 win.geometry('800x480')#size of window
 countDownText = "count"
-countDown = Label(win,text= countDownText ,anchor=CENTER,font= myFont) #create label for countdown
+countDown = Label(win,text= countDownText ,anchor=CENTER,font= myFont, bg="white") #create label for countdown
 #countDown.pack()
-countDown.grid(row=0,column=0, sticky="nsew")#puts the countdown to the center of the screen
+countDown.grid(row=2,column=0, sticky="nsew")#puts the countdown to the center of the screen
 exitButton  = Button(win, text = "Exit", font = myFont, command = exitProgram, height =2 , width = 6) 
 #exitButton.pack(side = BOTTOM)
 
-ledButton = Button(win, text = "LED ON", font = myFont, command = ledON, height = 2, width =8 )
-ledButton.grid(row=1)
-#ledButton.pack()
-#if( (int(time.ctime(time.time()))>=17 )and (int(time.ctime(time.time()))<=8) ):
-	#print(time.ctime(time.time()))
+#Title Label
+top= Label(text="ECE Makerspace",anchor=E,font=myFont, fg="white", bg="red")
+top.grid(row=0,column=0)
+
+#User Name Label
+welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, bg="white")
+welcome.grid(row=1,column=0)
+
+#End Session Label
+button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg="white")
+button.grid(row=3,column=0)
+
+#Buddy Label
+
+#Reswipe Label
+
+#Authorized Label
+
+#Start Label
+
+
 endTime = time.time()+countDownIncrementer
 
 
