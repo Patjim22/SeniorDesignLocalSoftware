@@ -53,6 +53,7 @@ def configurePi():
 
 win = Tk()
 
+
 myFont = font.Font(family = 'Helvetica', size = 84, weight = 'bold')
 #config column rows and col
 Grid.rowconfigure(win,0, weight=1)
