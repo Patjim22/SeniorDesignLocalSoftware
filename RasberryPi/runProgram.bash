@@ -1,2 +1,2 @@
 #!/bin/bash
-/home/RasberryPiSoftware/RasberryPi/test.py | test2.py
+/home/RasberryPiSoftware/RasberryPi/test.py | /home/RasberryPiSoftware/RasberryPi/test2.py
