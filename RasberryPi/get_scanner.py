@@ -59,7 +59,7 @@ CONTROLOPTO =2
 USBSEL =14
 RESETBUTTON = 18
 
-
+BackUp_USER= {200248706, 200289830}
 channel_list = (2,3,4,17,22,27,14)              # Pin 2 needs changed
     # Sets all GPIO pins in the chanel list as an output
 GPIO.setup(channel_list, GPIO.OUT, initial =GPIO.LOW)

@@ -2,5 +2,6 @@ import sys
 import re
 
 
-for line in sys.stdin:
-    print("T2: "+ line)
+while True:
+    card = sys.stdin
+    print(card)
