@@ -11,12 +11,11 @@ import time
 global start 
 global endTime
 global countDownText
-countDownIncrementer = 1*60 #number of minutes wanted goes where the 1 is
+countDownMinutes=1
+countDownIncrementer = countDownMinutes*60 #number of minutes wanted goes where the 1 is
 
 
-win = Tk()
 
-myFont = font.Font(family = 'Helvetica', size = 84, weight = 'bold')
 
 
 def ledON():
@@ -35,7 +34,27 @@ def exitProgram():
 	#GPIO.cleanup()
 	win.quit()	
  
- #config column rows and col
+def countdown():
+	currentTime =endTime-time.time()
+	#print(int(currentTime/60),":", int(currentTime%60))
+	countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
+	#countDown.config(text=str(int(currentTime))+":")
+	#print(str(time.localtime().tm_hour) +":"+str(time.localtime().tm_min))
+	
+	
+	#time.sleep(1)
+	win.update()
+	
+def configurePi():
+    #pull config data from SQL database
+    return
+
+    
+
+win = Tk()
+
+myFont = font.Font(family = 'Helvetica', size = 84, weight = 'bold')
+#config column rows and col
 Grid.rowconfigure(win,0, weight=1)
 Grid.rowconfigure(win,1, weight=1)
 Grid.columnconfigure(win,0,weight=1)
@@ -56,20 +75,11 @@ ledButton.grid(row=1)
 	#print(time.ctime(time.time()))
 endTime = time.time()+countDownIncrementer
 
-def countdown():
-	currentTime =endTime-time.time()
-	#print(int(currentTime/60),":", int(currentTime%60))
-	countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
-	#countDown.config(text=str(int(currentTime))+":")
-	#print(str(time.localtime().tm_hour) +":"+str(time.localtime().tm_min))
-	
-	
-	#time.sleep(1)
-	win.update()
-	
 
-while(time.time() <= endTime):
-	countdown()
+ 
+while True:
+    if time.time() <= endTime:
+      countdown()
 
 
 

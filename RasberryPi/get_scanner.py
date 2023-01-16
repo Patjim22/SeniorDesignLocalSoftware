@@ -5,7 +5,7 @@
                                                 # location at which teh keycard reader code was found
 from tkinter import *
 from tkinter import font
-from sql_connection 
+import sql_connection
 import asyncio
 import evdev
 import RPi.GPIO as GPIO
