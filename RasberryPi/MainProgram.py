@@ -146,6 +146,7 @@ while True:
 	card = sys.stdin.readline().rstrip()
 	sys.stdin.flush
 	if(check_if_authorized(card)):
+		ledButton.config(text="USER ID is: " +card)
 		if(user_1_state ==0):
 			user_1_state=1
 	if(time.localtime().tm_hour<endOfWorkingHours and time.localtime().tm_hour >=beginningOfWorkHours):#between 8am and 5pm only 1 user is needed
