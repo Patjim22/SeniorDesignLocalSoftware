@@ -103,7 +103,7 @@ def disableDevice():
     user_1_state =0
     user_2_state =0
 
-def check_if_authorized():
+def check_if_authorized(card):
 	USERS ={100019744,100019747} #visitor 1 id #visitor 4 id
     #write user compatison code for sql in this
 	if card in BackUp_USER:
