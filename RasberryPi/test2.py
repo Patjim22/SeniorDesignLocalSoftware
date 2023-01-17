@@ -3,5 +3,5 @@ import re
 
 
 while True:
-    card = sys.stdin
+    card = input()
     print(card)
