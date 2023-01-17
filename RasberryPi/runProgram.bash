@@ -1,2 +1,2 @@
 #!/bin/bash
-python3 -u test.py | python3 MainProgram.py
+python3 -u get_scanner.py | python3 MainProgram.py
