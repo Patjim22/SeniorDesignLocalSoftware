@@ -134,7 +134,9 @@ endTime = time.time()+countDownIncrementer
 while True:
 	if time.time() <= endTime:
 		countdown()
-	card = sys.stdin
+	card = sys.stdin.readline().rstrip()
+	sys.stdin.flush
+	print("T2: "+str(card))
 	if(time.localtime().tm_hour<endOfWorkingHours and time.localtime().tm_hour >=beginningOfWorkHours):#between 8am and 5pm only 1 user is needed
 		if(user_1_state or user_2_state):
 			enableDevice()
