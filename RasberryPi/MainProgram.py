@@ -37,7 +37,7 @@ CONTROLOPTO =2
 USBSEL =14
 RESETBUTTON = 18
 
-
+BackUp_USER= {200248706, 200289830}
 channel_list = (2,3,4,17,22,27,14)              # Pin 2 needs changed
     # Sets all GPIO pins in the chanel list as an output
 #GPIO.setup(channel_list, GPIO.OUT, initial =GPIO.LOW)
@@ -103,6 +103,15 @@ def disableDevice():
     user_1_state =0
     user_2_state =0
 
+def check_if_authorized():
+	USERS ={100019744,100019747} #visitor 1 id #visitor 4 id
+    #write user compatison code for sql in this
+	if card in BackUp_USER:
+		return True
+	if card in USERS:
+		return True
+	return False	# function returns true if authorized user otherwise false
+	
     
 
 win = Tk()
@@ -136,17 +145,19 @@ while True:
 		countdown()
 	card = sys.stdin.readline().rstrip()
 	sys.stdin.flush
-	print("T2: "+str(card))
+	if(check_if_authorized(card)):
+		if(user_1_state ==0):
+			user_1_state=1
 	if(time.localtime().tm_hour<endOfWorkingHours and time.localtime().tm_hour >=beginningOfWorkHours):#between 8am and 5pm only 1 user is needed
 		if(user_1_state or user_2_state):
 			enableDevice()
 			print("use time: " + str((endTime-time.time())/60) +"minutes")
            
-		else:#outside of normal hours a buddy is required
-			print("A buddy is required")
-			if(user_1_state and user_2_state):
-				enableDevice()
-			else:
-				print("another user is required")
+	else:#outside of normal hours a buddy is required
+		print("A buddy is required")
+		if(user_1_state and user_2_state):
+			enableDevice()
+		else:
+			print("another user is required")
 
 
