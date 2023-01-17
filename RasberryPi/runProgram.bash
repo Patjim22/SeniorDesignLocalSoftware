@@ -1,2 +1,2 @@
 #!/bin/bash
-python -u test.py | python MainProgram.py
+python3 -u test.py | python3 MainProgram.py
