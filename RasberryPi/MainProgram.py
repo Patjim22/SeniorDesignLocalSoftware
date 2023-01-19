@@ -1,91 +1,107 @@
+import threading
+import time
 import sys
+import re
 from tkinter import *
 from tkinter import font
-import time
 #import RPi.GPIO as GPIO
 
-#GPIO.setmode(GPIO.BOARD)
-#GPIO.setup(40, GPIO.OUT)
-#GPIO.output(40, GPIO.LOW)
-
+card = "0"
 global start 
-global endTime
+global endTime 
+endTime=0
 global countDownText
+global user_1_state, user_2_state
 countDownMinutes=1
 endOfWorkingHours=17	#5pm
 beginningOfWorkHours=8	#8am
-user_1_state = 0
+user_1_state =0
 user_2_state = 0
+user_1_ID = 0
+user_2_ID = 0
 
-countDownIncrementer = countDownMinutes*60 #number of minutes wanted goes where the 1 is
 
-#GPIO.setwarnings(False)                         # Suppresses warning messages from output.
+
 
     
-    # Add all used gpio pins for configuration
-    #22 is green LED device On
-    #27 user 1 #17 user 2 yellow LEDs
-    #4 and 3  RED LEDS
-    #2 control opto
-    #14 usb sel
-DEVICEON =22
-USER1LED =27
+# Add all used gpio pins for configuration
+DEVICEON =22                                    #22 is green LED device On
+USER1LED =27                                    #27 user 1 #17 user 2 yellow LEDs
 USER2LED=17
-REDLED1 =4
+REDLED1 =4                                      #4 and 3  RED LEDS
 REDLED2 =3
-CONTROLOPTO =2
-USBSEL =14
+CONTROLOPTO =2                                  #2 control opto
+USBSEL =14                                      #14 usb sel
 RESETBUTTON = 18
 
 BackUp_USER= {200248706, 200289830}
 channel_list = (2,3,4,17,22,27,14)              # Pin 2 needs changed
+
+class ID_Check_Thread (threading.Thread):
+    def __init__(self, thread_name, thread_ID):
+        threading.Thread.__init__(self)
+        self.thread_name = thread_name
+        self.thread_ID = thread_ID
+    # helper function to execute the threads
+    def run(self):
+        while True:
+            if(card!='0'):
+                assignUserToMachine(card)
+                print("ExitT1")
+                
+            time.sleep(1)
+
+class ReadCardTread (threading.Thread): #reads the card
+    def __init__(self, thread_name, thread_ID):
+        threading.Thread.__init__(self)
+        self.thread_name = thread_name
+        self.thread_ID = thread_ID
+
+    # helper function to execute the threads
+    def run(self):
+        global card
+        for line in sys.stdin:
+            if  'q' == line.rstrip():
+                break
+            regSearch =re.compile('\+.*')
+            cardNumber = regSearch.match(line)
+            #print(cardNumber)
+            if(cardNumber!=None):
+                card = cardNumber.string[1:10].rstrip()
+                print(cardNumber.group()[1:10].rstrip())
+                print()
+            else:
+                print(len(line))
+                if(len(line)==10):
+                    card = line[0:8]
+                    print(line[0:8])
+            time.sleep(10)
+            
+def setupGPIO():
+    #GPIO.setmode(GPIO.BOARD)                                   #Use Board pin numbers
+    #GPIO.setwarnings(False)                                    # Suppresses warning messages from output.
     # Sets all GPIO pins in the chanel list as an output
-#GPIO.setup(channel_list, GPIO.OUT, initial =GPIO.LOW)
-
-#GPIO.setup(RESETBUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)#sets the reset to a input with a pull up resistor
-   
-#GPIO.output(DEVICEON,FALSE)                            # Set power pin to on
+    #GPIO.setup(channel_list, GPIO.OUT, initial =GPIO.LOW)
+    #GPIO.setup(RESETBUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP) #sets the reset to a input with a pull up resistor
+    #GPIO.output(DEVICEON,FALSE)                                # Set power pin to on
     # Set switch pin to defaults
-#GPIO.output(USBSEL,False)                            # USB
-#GPIO.output(CONTROLOPTO,False)                            # Opto-Isolator
+    #GPIO.output(USBSEL,False)                                  # USB
+    #GPIO.output(CONTROLOPTO,False)                             # Opto-Isolator
+    print("GPIO SETUP")
 
-    # Give scanner time to get online
-print("INITIALIZED")
-
-
-
-def ledON():
-	print("LED button pressed")
-	start = time.ctime(time.time())
-	print(start)
-	#if GPIO.input(40) :
-	#	GPIO.output(40,GPIO.LOW)
-	ledButton["text"] = "LED ON"
-	#else:
-	#	GPIO.output(40,GPIO.HIGH)
-	#ledButton["text"] = "LED OFF"
-
-def exitProgram():
-	print("Exit Button pressed")
-	#GPIO.cleanup()
-	win.quit()	
- 
-def countdown():
-	currentTime =endTime-time.time()
-	#print(int(currentTime/60),":", int(currentTime%60))
-	countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
-	#countDown.config(text=str(int(currentTime))+":")
-	#print(str(time.localtime().tm_hour) +":"+str(time.localtime().tm_min))
+def countdown(): #does the countdown when it is required
+    currentTime =endTime-time.time()                            #measures the endtime vs current time
+    #currentTime = time.time()
+    countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
+    win.update()
 	
-	
-	#time.sleep(1)
-	win.update()
-	
-def configurePi():
-    #pull config data from SQL database
+def configurePi():#pull config data from SQL database
+    countDownMinutes # should be editable to change the length of the countdown
+    endOfWorkingHours # changes the end time of the makerspace working hours
+    beginningOfWorkHours # changes the start time of the makerspace working hours
     return
 
-def enableDevice():
+def enableDevice(): #enables the usb and Control OPTO issolators and starts the countdown
 	#GPIO.output(CONTROLOPTO,True)              # Opto
 	#GPIO.output(USBSEL,True)                 	# USB
 	print("ACTIVATED")
@@ -93,29 +109,61 @@ def enableDevice():
 	endTime = time.time()+countDownIncrementer
 
 def disableDevice():
+    global user_1_state , user_2_state,user_2_ID, user_1_ID, endTime
     #GPIO.output(CONTROLOPTO,False)             # Opto
     #GPIO.output(USBSEL,False)                	# USB
     #GPIO.output(USER2LED,False)               	# User 2 led
     #GPIO.output(USER1LED,False)                # User1 led
     print("DISABLED")
-    print("Invalid user")
     #GPIO.output(DEVICEON,False)               	# Device enable light
     user_1_state =0
     user_2_state =0
+    user_1_ID =0
+    user_2_ID =0
+    
+    endTime=0
+
+def pauseDevice():#disables optoControl
+    #GPIO.output(CONTROLOPTO,False)             # Opto
+    print("Paused device")
 
 def check_if_authorized(card):
-	USERS ={100019744,100019747} #visitor 1 id #visitor 4 id
+    USERS ={100019744,100019747} #visitor 1 id #visitor 4 id
     #write user compatison code for sql in this
-	if card in BackUp_USER:
-		return True
-	if card in USERS:
-		return True
-	return False	# function returns true if authorized user otherwise false
-	
-    
+    if card in BackUp_USER:
+        enableDevice()
+        return True
+    if card in USERS:
+        return True
+    return False	# function returns true if authorized user otherwise false
 
+def assignUserToMachine(card):
+    global user_1_state , user_2_state
+    authorized = check_if_authorized(card)
+    if(authorized):
+        if(user_1_state==0):
+            user_1_state=1
+            user_1_ID= card
+        if(user_1_state==1):
+            if(card != user_1_ID):
+                user_2_state=1
+                user_2_ID = card
+        
+    if(time.localtime().tm_hour<endOfWorkingHours and time.localtime().tm_hour >=beginningOfWorkHours):#during working houres only 1 user is needed
+        if(user_1_state or user_2_state):
+            enableDevice()
+                
+    else:#outside of normal hours a buddy is required
+        print("A buddy is required")        #needs to write to a label on the gui
+        if(user_1_state and user_2_state):
+            enableDevice()
+        else:
+            print("another user is required")
+
+T1 = True
+T2 = True
+configurePi()
 win = Tk()
-
 myFont = font.Font(family = 'Helvetica', size = 84, weight = 'bold')
 #config column rows and col
 Grid.rowconfigure(win,0, weight=1)
@@ -126,39 +174,32 @@ win.title("Access Control")#window name
 win.geometry('800x480')#size of window
 countDownText = "count"
 countDown = Label(win,text= countDownText ,anchor=CENTER,font= myFont) #create label for countdown
-#countDown.pack()
 countDown.grid(row=0,column=0, sticky="nsew")#puts the countdown to the center of the screen
-exitButton  = Button(win, text = "Exit", font = myFont, command = exitProgram, height =2 , width = 6) 
-#exitButton.pack(side = BOTTOM)
 
-ledButton = Button(win, text = "LED ON", font = myFont, command = ledON, height = 2, width =8 )
+ledButton = Button(win, text = "LED ON", font = myFont, height = 2, width =8 )
 ledButton.grid(row=1)
-#ledButton.pack()
-#if( (int(time.ctime(time.time()))>=17 )and (int(time.ctime(time.time()))<=8) ):
-	#print(time.ctime(time.time()))
-endTime = time.time()+countDownIncrementer
+#endTime = time.time()+countDownIncrementer
 
+disableDevice()
 
- 
-while True:
-	if time.time() <= endTime:
-		countdown()
-	card = sys.stdin.readline().rstrip()
-	sys.stdin.flush
-	if(check_if_authorized(card)):
-		ledButton.config(text="USER ID is: " +card)
-		if(user_1_state ==0):
-			user_1_state=1
-	if(time.localtime().tm_hour<endOfWorkingHours and time.localtime().tm_hour >=beginningOfWorkHours):#between 8am and 5pm only 1 user is needed
-		if(user_1_state or user_2_state):
-			enableDevice()
-			print("use time: " + str((endTime-time.time())/60) +"minutes")
-           
-	else:#outside of normal hours a buddy is required
-		print("A buddy is required")
-		if(user_1_state and user_2_state):
-			enableDevice()
-		else:
-			print("another user is required")
+countDownIncrementer = countDownMinutes*60 #number of minutes wanted goes where the 1 is
+th1=  ID_Check_Thread("T1",1000)
+th2 = ReadCardTread("T2",4000)
+th1.start()
+th2.start()
 
+while T1:
+    if(endTime!=0):
+        countdown()
+    else:
+        countDown.config(text=str(time.localtime().tm_hour%12) +":"+str(time.localtime().tm_min))
+        win.update()
+    #if(input().rstrip()=="q"):
+    #    T1 = False
+    #   T2 = False
+    #    break
+    #print("Hello " +str(T1))
+    time.sleep(.5)   
 
+win.destroy()
+print("Exit")
