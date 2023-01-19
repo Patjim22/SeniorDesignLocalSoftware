@@ -6,7 +6,6 @@
 from tkinter import *
 from tkinter import font
 import sql_connection
-import asyncio
 import evdev
 import RPi.GPIO as GPIO
 from evdev import *
@@ -219,7 +218,7 @@ while(1):
         x += key_lookup 
        if(data.scancode == 28): 
         print (x)   # Print it all out! 
-        user_authentication(x)
+        #user_authentication(x)
         x = ''
  
     
