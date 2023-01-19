@@ -20,7 +20,7 @@ user_2_state = 0
 countDownIncrementer = countDownMinutes*60 #number of minutes wanted goes where the 1 is
 
 #GPIO.setwarnings(False)                         # Suppresses warning messages from output.
-#GPIO.setmode(GPIO.BCM)                          # Use GPIO Pin numbers instead on Board pin numbers
+
     
     # Add all used gpio pins for configuration
     #22 is green LED device On

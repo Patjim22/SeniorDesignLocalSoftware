@@ -39,7 +39,7 @@ class myThread1 (threading.Thread):
             
             time.sleep(1)
 
-class myThread2 (threading.Thread):
+class ReadCardTread (threading.Thread):
     def __init__(self, thread_name, thread_ID):
         threading.Thread.__init__(self)
         self.thread_name = thread_name
@@ -88,7 +88,7 @@ T2 = True
 
 
 th1=  myThread1("T1",1000)
-th2 = myThread2("T2",4000)
+th2 = ReadCardTread("T2",4000)
 
 
 
