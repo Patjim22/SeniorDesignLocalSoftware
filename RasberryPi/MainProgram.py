@@ -165,7 +165,8 @@ def assignUserToMachine(card):
                 enableDevice()
             else:
                 print("A buddy is required")        #needs to write to a label on the gui     
-
+    else:
+        print("non-authorized user")
 
 T1 = True
 T2 = True
