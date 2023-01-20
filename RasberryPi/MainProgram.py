@@ -48,9 +48,10 @@ class ID_Check_Thread (threading.Thread):
         global card
         while True:
             if(card!='0'):
+                print("Reading user card")
                 assignUserToMachine(card)
                 card ="0"
-                print("ExitT1")
+                
                 
             time.sleep(2)
 
@@ -79,7 +80,7 @@ class ReadCardTread (threading.Thread): #reads the card
                     card = line[0:9]
                     print(line[0:9])
             sys.stdin.flush
-            time.sleep(10)
+            time.sleep(4)
             
 def setupGPIO():
     #GPIO.setmode(GPIO.BOARD)                                   #Use Board pin numbers
@@ -160,11 +161,10 @@ def assignUserToMachine(card):
             if(user_1_state or user_2_state):
                 enableDevice()     
         else:#outside of normal hours a buddy is required
-            print("A buddy is required")        #needs to write to a label on the gui
             if(user_1_state and user_2_state):
                 enableDevice()
             else:
-                print("another user is required")       
+                print("A buddy is required")        #needs to write to a label on the gui     
 
 
 T1 = True
@@ -191,7 +191,7 @@ disableDevice()
 
 countDownIncrementer = countDownMinutes*60 #number of minutes wanted goes where the 1 is
 th1=  ID_Check_Thread("T1",1000)
-th2 = ReadCardTread("T2",4000)
+th2 = ReadCardTread("T2",2000)
 th1.start()
 th2.start()
 
