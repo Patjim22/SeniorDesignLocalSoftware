@@ -12,6 +12,7 @@ global endTime
 endTime=0
 global countDownText
 global user_1_state, user_2_state
+userName =""
 countDownMinutes=1
 endOfWorkingHours=17	#5pm
 beginningOfWorkHours=8	#8am
@@ -142,6 +143,7 @@ def pauseDevice():#disables optoControl
 def check_if_authorized(card):
     USERS ={"100019744","100019747"} #visitor 1 id #visitor 4 id
     #write user compatison code for sql in this
+    userName
     if card in BackUp_USER:
         enableDevice()
         return True
@@ -203,7 +205,8 @@ while T1:
     if(endTime!=0):
         countdown()
     else:
-        countDown.config(text=str(time.localtime().tm_hour%12) +":"+str(time.localtime().tm_min))
+        #countDown.config(text=str(time.localtime().tm_hour%12) +":"+str(time.localtime().tm_min))
+        countDown.config(text= time.strftime("%I:%M:%S")) 
     win.update()
     #if(input().rstrip()=="q"):
     #    T1 = False
