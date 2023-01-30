@@ -205,8 +205,7 @@ while T1:
     if(endTime!=0):
         countdown()
     else:
-        #countDown.config(text=str(time.localtime().tm_hour%12) +":"+str(time.localtime().tm_min))
-        countDown.config(text= time.strftime("%I:%M:%S")) 
+        countDown.config(text= time.strftime("%I:%M:%S")) #displays time in 12 hour format
     win.update()
     #if(input().rstrip()=="q"):
     #    T1 = False
