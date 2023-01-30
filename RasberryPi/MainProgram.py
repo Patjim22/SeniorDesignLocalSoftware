@@ -25,31 +25,38 @@ user_2_ID = 0
 
     
 # Add all used gpio pins for configuration
-DEVICEON =22                                    #22 is green LED device On
-USER1LED =27                                    #27 user 1 #17 user 2 yellow LEDs
-USER2LED=17
-REDLED1 =4                                      #4 and 3  RED LEDS
-REDLED2 =3
-CONTROLOPTO =2                                  #2 control opto
+DEVICEON =9                                     #22 is green LED device On
+USER1LED =11                                    #27 user 1 #17 user 2 yellow LEDs
+USER2LED=13
+REDLED1 =19                                     #4 and 3  RED LEDS
+REDLED2 =26
+CONTROLOPTO =17                                 #2 control opto
 USBSEL =14                                      #14 usb sel
+USBENABLE = 15
 RESETBUTTON = 18
+BUTTON1 = 5
+BUTTON2 = 6
 
-BackUp_USER= {200248706, 200289830}
-channel_list = (2,3,4,17,22,27,14)              # Pin 2 needs changed
+BackUp_USER= {"200248706", "200289830"}
+channel_list = (5,6,9,11,13,14,15,17,18,19,26)              # Pin 2 needs changed
 
 class ID_Check_Thread (threading.Thread):
+    
     def __init__(self, thread_name, thread_ID):
         threading.Thread.__init__(self)
         self.thread_name = thread_name
         self.thread_ID = thread_ID
     # helper function to execute the threads
     def run(self):
+        global card
         while True:
             if(card!='0'):
+                print("Reading user card")
                 assignUserToMachine(card)
-                print("ExitT1")
+                card ="0"
                 
-            time.sleep(1)
+                
+            time.sleep(2)
 
 class ReadCardTread (threading.Thread): #reads the card
     def __init__(self, thread_name, thread_ID):
@@ -73,9 +80,10 @@ class ReadCardTread (threading.Thread): #reads the card
             else:
                 print(len(line))
                 if(len(line)==10):
-                    card = line[0:8]
-                    print(line[0:8])
-            time.sleep(10)
+                    card = line[0:9]
+                    print(line[0:9])
+            sys.stdin.flush
+            time.sleep(4)
             
 def setupGPIO():
     #GPIO.setmode(GPIO.BOARD)                                   #Use Board pin numbers
@@ -90,10 +98,13 @@ def setupGPIO():
     print("GPIO SETUP")
 
 def countdown(): #does the countdown when it is required
+    global endTime
     currentTime =endTime-time.time()                            #measures the endtime vs current time
     #currentTime = time.time()
-    countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
-    win.update()
+    if(currentTime >0):
+        countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
+    else:
+        endTime =0
 	
 def configurePi():#pull config data from SQL database
     countDownMinutes # should be editable to change the length of the countdown
@@ -102,7 +113,8 @@ def configurePi():#pull config data from SQL database
     return
 
 def enableDevice(): #enables the usb and Control OPTO issolators and starts the countdown
-	#GPIO.output(CONTROLOPTO,True)              # Opto
+	global endTime
+    #GPIO.output(CONTROLOPTO,True)              # Opto
 	#GPIO.output(USBSEL,True)                 	# USB
 	print("ACTIVATED")
 	#GPIO.output(DEVICEON,True)                	# Device enable light
@@ -128,7 +140,7 @@ def pauseDevice():#disables optoControl
     print("Paused device")
 
 def check_if_authorized(card):
-    USERS ={100019744,100019747} #visitor 1 id #visitor 4 id
+    USERS ={"100019744","100019747"} #visitor 1 id #visitor 4 id
     #write user compatison code for sql in this
     if card in BackUp_USER:
         enableDevice()
@@ -138,7 +150,7 @@ def check_if_authorized(card):
     return False	# function returns true if authorized user otherwise false
 
 def assignUserToMachine(card):
-    global user_1_state , user_2_state
+    global user_1_state , user_2_state, user_1_ID, user_2_ID
     authorized = check_if_authorized(card)
     if(authorized):
         if(user_1_state==0):
@@ -148,17 +160,16 @@ def assignUserToMachine(card):
             if(card != user_1_ID):
                 user_2_state=1
                 user_2_ID = card
-        
-    if(time.localtime().tm_hour<endOfWorkingHours and time.localtime().tm_hour >=beginningOfWorkHours):#during working houres only 1 user is needed
-        if(user_1_state or user_2_state):
-            enableDevice()
-                
-    else:#outside of normal hours a buddy is required
-        print("A buddy is required")        #needs to write to a label on the gui
-        if(user_1_state and user_2_state):
-            enableDevice()
-        else:
-            print("another user is required")
+        if(time.localtime().tm_hour<endOfWorkingHours and time.localtime().tm_hour >=beginningOfWorkHours):#during working houres only 1 user is needed
+            if(user_1_state or user_2_state):
+                enableDevice()     
+        else:#outside of normal hours a buddy is required
+            if(user_1_state and user_2_state):
+                enableDevice()
+            else:
+                print("A buddy is required")        #needs to write to a label on the gui     
+    else:
+        print("non-authorized user")
 
 T1 = True
 T2 = True
@@ -184,7 +195,7 @@ disableDevice()
 
 countDownIncrementer = countDownMinutes*60 #number of minutes wanted goes where the 1 is
 th1=  ID_Check_Thread("T1",1000)
-th2 = ReadCardTread("T2",4000)
+th2 = ReadCardTread("T2",2000)
 th1.start()
 th2.start()
 
@@ -193,7 +204,7 @@ while T1:
         countdown()
     else:
         countDown.config(text=str(time.localtime().tm_hour%12) +":"+str(time.localtime().tm_min))
-        win.update()
+    win.update()
     #if(input().rstrip()=="q"):
     #    T1 = False
     #   T2 = False
