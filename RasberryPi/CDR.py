@@ -87,15 +87,15 @@ class Read_Card_Tread (threading.Thread): #reads the card
             time.sleep(4)
             
 def setupGPIO():
-    #GPIO.setmode(GPIO.BOARD)                                   #Use Board pin numbers
-    #GPIO.setwarnings(False)                                    # Suppresses warning messages from output.
+    GPIO.setmode(GPIO.BOARD)                                   #Use Board pin numbers
+    GPIO.setwarnings(False)                                    # Suppresses warning messages from output.
     # Sets all GPIO pins in the chanel list as an output
-    #GPIO.setup(channel_list, GPIO.OUT, initial =GPIO.LOW)
-    #GPIO.setup(RESETBUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP) #sets the reset to a input with a pull up resistor
-    #GPIO.output(DEVICEON,FALSE)                                # Set power pin to on
+    GPIO.setup(channel_list, GPIO.OUT, initial =GPIO.LOW)
+    GPIO.setup(RESETBUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP) #sets the reset to a input with a pull up resistor
+    GPIO.output(DEVICEON,FALSE)                                # Set power pin to on
     # Set switch pin to defaults
-    #GPIO.output(USBSEL,False)                                  # USB
-    #GPIO.output(CONTROLOPTO,False)                             # Opto-Isolator
+    GPIO.output(USBSEL,False)                                  # USB
+    GPIO.output(CONTROLOPTO,False)                             # Opto-Isolator
     print("GPIO SETUP")
 
 def countdown(): #does the countdown when it is required
@@ -114,21 +114,21 @@ def configurePi():#pull config data from SQL database
     return
 
 def enableDevice(): #enables the usb and Control OPTO issolators and starts the countdown
-	global endTime
-    #GPIO.output(CONTROLOPTO,True)              # Opto
-	#GPIO.output(USBSEL,True)                 	# USB
-	print("ACTIVATED")
-	#GPIO.output(DEVICEON,True)                	# Device enable light
-	endTime = time.time()+countDownIncrementer
+    global endTime
+    GPIO.output(CONTROLOPTO,True)              # Opto
+    GPIO.output(USBSEL,True)                 	# USB
+    print("ACTIVATED")
+    GPIO.output(DEVICEON,True)                	# Device enable light
+    endTime = time.time()+countDownIncrementer
 
 def disableDevice():
     global user_1_state , user_2_state,user_2_ID, user_1_ID, endTime
-    #GPIO.output(CONTROLOPTO,False)             # Opto
-    #GPIO.output(USBSEL,False)                	# USB
-    #GPIO.output(USER2LED,False)               	# User 2 led
-    #GPIO.output(USER1LED,False)                # User1 led
+    GPIO.output(CONTROLOPTO,False)             # Opto
+    GPIO.output(USBSEL,False)                	# USB
+    GPIO.output(USER2LED,False)               	# User 2 led
+    GPIO.output(USER1LED,False)                # User1 led
     print("DISABLED")
-    #GPIO.output(DEVICEON,False)               	# Device enable light
+    GPIO.output(DEVICEON,False)               	# Device enable light
     user_1_state =0
     user_2_state =0
     user_1_ID =0
@@ -137,7 +137,7 @@ def disableDevice():
     endTime=0
 
 def pauseDevice():#disables optoControl
-    #GPIO.output(CONTROLOPTO,False)             # Opto
+    GPIO.output(CONTROLOPTO,False)             # Opto
     print("Paused device")
 
 def check_if_authorized(card):
