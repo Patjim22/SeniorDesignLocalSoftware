@@ -12,7 +12,7 @@ global endTime
 endTime=0
 global countDownText
 global user_1_state, user_2_state
-twoSwipeTime = 0        #used to hold how long to wait for a buddy to swipe
+twoSwipeTime = 10        #used to hold how long to wait for a buddy to swipe
 buddySwipeReuiredBy=0   #holds the time to cancel out and say you were rejected because no buddy
 userName =""
 countDownMinutes=1
@@ -113,6 +113,7 @@ def configurePi():#pull config data from SQL database
     countDownMinutes # should be editable to change the length of the countdown
     endOfWorkingHours # changes the end time of the makerspace working hours
     beginningOfWorkHours # changes the start time of the makerspace working hours
+    twoSwipeTime #deault is 10sec change to give buddy more or less time to swipe after first swipe
     return
 
 def enableDevice(): #enables the usb and Control OPTO issolators and starts the countdown
