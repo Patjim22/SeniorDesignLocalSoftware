@@ -12,6 +12,8 @@ global endTime
 endTime=0
 global countDownText
 global user_1_state, user_2_state
+twoSwipeTime = 0        #used to hold how long to wait for a buddy to swipe
+buddySwipeReuiredBy=0   #holds the time to cancel out and say you were rejected because no buddy
 userName =""
 countDownMinutes=1
 endOfWorkingHours=17	#5pm
@@ -152,7 +154,7 @@ def check_if_authorized(card):
     return False	# function returns true if authorized user otherwise false
 
 def assignUserToMachine(card):
-    global user_1_state , user_2_state, user_1_ID, user_2_ID
+    global user_1_state , user_2_state, user_1_ID, user_2_ID, buddySwipeReuiredBy
     authorized = check_if_authorized(card)
     if(authorized):
         if(user_1_state==0):
@@ -162,6 +164,7 @@ def assignUserToMachine(card):
             if(card != user_1_ID):
                 user_2_state=1
                 user_2_ID = card
+                buddySwipeReuiredBy=0
         if(time.localtime().tm_hour<endOfWorkingHours and time.localtime().tm_hour >=beginningOfWorkHours):#during working houres only 1 user is needed
             if(user_1_state or user_2_state):
                 enableDevice()     
@@ -169,10 +172,16 @@ def assignUserToMachine(card):
             if(user_1_state and user_2_state):
                 enableDevice()
             else:
-                print("A buddy is required")        #needs to write to a label on the gui     
+                print("A buddy is required")        #needs to write to a label on the gui
+                buddySwipeReuiredBy=time.time()+twoSwipeTime     
     else:
         print("non-authorized user")
 
+def noBuddySwipe():#send to database that id 1 didn't have a buddy
+    user_1_ID
+    
+    
+    
 T1 = True
 T2 = True
 
@@ -228,8 +237,20 @@ while T1:
         countdown()
     else:
         countDown.config(text= time.strftime("%I:%M:%S")) #displays time in 12 hour format
-    win.update()
     
+    if(buddySwipeReuiredBy!=0):
+        currentTime =buddySwipeReuiredBy-time.time() 
+        if(currentTime >0):
+            #print you have blank time to swipe
+            countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
+        else:
+            buddySwipeReuiredBy=0
+            noBuddySwipe()
+            
+    
+    
+    
+    win.update()
     time.sleep(.5)  #sleeps for 1/2 a second 
 
 win.destroy()

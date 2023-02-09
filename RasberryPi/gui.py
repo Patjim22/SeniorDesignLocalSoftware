@@ -11,12 +11,12 @@ import time
 global start 
 global endTime
 global countDownText
+endTime=0
 countDownMinutes=1
 countDownIncrementer = countDownMinutes*60 #number of minutes wanted goes where the 1 is
 
 
-
-
+     
 
 
 def exitProgram():
@@ -24,15 +24,14 @@ def exitProgram():
 	#GPIO.cleanup()
 	win.quit()	
  
-def countdown():
-	currentTime =endTime-time.time()
-	#print(int(currentTime/60),":", int(currentTime%60))
-	countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)) +" minutes remaining")
-	#print(str(time.localtime().tm_hour) +":"+str(time.localtime().tm_min))
-	
-	
-	#time.sleep(1)
-	win.update()
+def countdown(): #does the countdown when it is required
+    global endTime
+    currentTime =endTime-time.time()                            #measures the endtime vs current time
+    #currentTime = time.time()
+    if(currentTime >0):
+        countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
+    else:
+        endTime =0
 	
 def configurePi():
     #pull config data from SQL database
@@ -136,19 +135,37 @@ def steptwo():
 	button.grid(row=3,column=0)
 	newstart= False
 
-endTime = time.time()+countDownIncrementer
+win.update()
 
+#th2 = Read_Card_Tread("T2",2000)
+#th2.start()
 #main
-while True:
-	if newstart == True:
-		start=Label(text="Swipe Card To Begin Session", anchor=CENTER, bg='white', font=myFont, fg='blue')
-		start.grid(row=1,column=0)
-		win.after(3000, start.config(text="AUTHORIZED", fg='green'))
-		
-		
-	if time.time() <= endTime:
-		countdown()
-	
+for line in sys.stdin:
+    countDown.config(text= time.strftime("%I:%M:%S")) #displays time in 12 hour format
+    win.update()
+    if  'q' == line.rstrip():
+        break
+    if 's' ==line.rstrip():
+        start=Label(text="Swipe Card To Begin Session", anchor=CENTER, bg='white', font=myFont, fg='blue')
+        start.grid(row=1,column=0)
+        win.update()
+    if 'd' ==line.rstrip():
+        start.config(text="AUTHORIZED", fg='green')
+        win.update()
+        time.sleep(2)
+        start.config(text="Welcome User",fg='black')
+        endTime =60
+        print("count")
+        while(endTime !=0):
+            countdown()
+            win.update()
+           
+    
+                 
+    sys.stdin.flush
+            
+                
+
 
 
 
