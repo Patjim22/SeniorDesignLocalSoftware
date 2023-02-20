@@ -12,7 +12,7 @@ global endTime
 endTime=0
 global countDownText
 global user_1_state, user_2_state
-twoSwipeTime = 10        #used to hold how long to wait for a buddy to swipe
+twoSwipeTime = 20        #used to hold how long to wait for a buddy to swipe
 buddySwipeReuiredBy=0   #holds the time to cancel out and say you were rejected because no buddy
 userName =""
 countDownMinutes=1
@@ -43,6 +43,7 @@ BUTTON2 = 6
 BackUp_USER= {"200248706", "200289830"}
 channel_list = (5,6,9,11,13,14,15,17,18,19,26)              # Pin 2 needs changed
 
+
 class ID_Check_Thread (threading.Thread):
     
     def __init__(self, thread_name, thread_ID):
@@ -55,7 +56,11 @@ class ID_Check_Thread (threading.Thread):
         while True:
             if(card!='0'):
                 print("Reading user card")
-                assignUserToMachine(card)
+                if(endTime==0):                         #if endtime ==0 then no one is currently using the machine
+                    assignUserToMachine(card)
+                else:
+                    if((user_1_ID ==card) or (user_2_ID ==card)):
+                        assignUserToMachine(card)
                 card ="0"
                 
                 
@@ -108,6 +113,7 @@ def countdown(): #does the countdown when it is required
         countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
     else:
         endTime =0
+        disableDevice()
 	
 def configurePi():#pull config data from SQL database
     countDownMinutes # should be editable to change the length of the countdown
@@ -117,15 +123,15 @@ def configurePi():#pull config data from SQL database
     return
 
 def enableDevice(): #enables the usb and Control OPTO issolators and starts the countdown
-	global endTime
+    global endTime
     #GPIO.output(CONTROLOPTO,True)              # Opto
 	#GPIO.output(USBSEL,True)                 	# USB
-	print("ACTIVATED")
-	#GPIO.output(DEVICEON,True)                	# Device enable light
-	endTime = time.time()+countDownIncrementer
+    print("ACTIVATED")
+    #GPIO.output(DEVICEON,True)                	# Device enable light
+    endTime = time.time()+countDownIncrementer
 
 def disableDevice():
-    global user_1_state , user_2_state,user_2_ID, user_1_ID, endTime
+    global user_1_state , user_2_state,user_2_ID, user_1_ID, endTime, userName
     #GPIO.output(CONTROLOPTO,False)             # Opto
     #GPIO.output(USBSEL,False)                	# USB
     #GPIO.output(USER2LED,False)               	# User 2 led
@@ -136,6 +142,7 @@ def disableDevice():
     user_2_state =0
     user_1_ID =0
     user_2_ID =0
+    userName =""
     
     endTime=0
 
@@ -144,11 +151,14 @@ def pauseDevice():#disables optoControl
     print("Paused device")
 
 def check_if_authorized(card):
+    global userName, user_1_state, user_2_state
     USERS ={"100019744","100019747"} #visitor 1 id #visitor 4 id
     #write user compatison code for sql in this
     userName
     if card in BackUp_USER:
-        enableDevice()
+        userName = "Admin"
+        user_1_state=1
+        user_2_state=1
         return True
     if card in USERS:
         return True
@@ -180,8 +190,6 @@ def assignUserToMachine(card):
 
 def noBuddySwipe():#send to database that id 1 didn't have a buddy
     user_1_ID
-    
-    
     
 T1 = True
 T2 = True
@@ -217,12 +225,23 @@ button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg="
 button.grid(row=3,column=0)
 
 #Buddy Label
+buddy=Label(text="Buddy Required, Swipe Another ID", anchor=CENTER, font=myFont, bg='white')
 
 #Reswipe Label
+reswipe=Label(text="Reswipe To Continue Session", anchor=CENTER, font=myFont, bg='white', fg='red')
 
 #Authorized Label
+#authorized=Label(text="AUTHORIZED", anchor=CENTER, font=myFont, bg='white', fg='green')
+#not_authorized= Label(text="NOT AUTHORIZED", anchor=CENTER, font=myFont, bg='white', fg='red')
+
+#User Name Label
+#welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, bg='white')
 
 #Start Label
+#start=Label(text="Swipe Card To Begin Session", anchor=CENTER, bg='white', font=myFont, fg='blue')
+
+   
+    
 configurePi()
 
 disableDevice()
@@ -243,13 +262,15 @@ while T1:
         currentTime =buddySwipeReuiredBy-time.time() 
         if(currentTime >0):
             #print you have blank time to swipe
-            countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
+            countDown.config(text="Time for Buddy Swipe: "+str(int(currentTime/60)) +":" +str(int(currentTime%60)))
         else:
             buddySwipeReuiredBy=0
             noBuddySwipe()
             
-    
-    
+    if(userName != ""):
+        welcome.config(text="Welcome: "+ userName)
+    else:
+        welcome.config(text="Welcome USER!")
     
     win.update()
     time.sleep(.5)  #sleeps for 1/2 a second 
