@@ -11,12 +11,12 @@ import time
 global start 
 global endTime
 global countDownText
+endTime=0
 countDownMinutes=1
 countDownIncrementer = countDownMinutes*60 #number of minutes wanted goes where the 1 is
 
 
-
-
+     
 
 
 def exitProgram():
@@ -24,15 +24,14 @@ def exitProgram():
 	#GPIO.cleanup()
 	win.quit()	
  
-def countdown():
-	currentTime =endTime-time.time()
-	#print(int(currentTime/60),":", int(currentTime%60))
-	countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)) +" minutes remaining")
-	#print(str(time.localtime().tm_hour) +":"+str(time.localtime().tm_min))
-	
-	
-	#time.sleep(1)
-	win.update()
+def countdown(): #does the countdown when it is required
+    global endTime
+    currentTime =endTime-time.time()                            #measures the endtime vs current time
+    #currentTime = time.time()
+    if(currentTime >0):
+        countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
+    else:
+        endTime =0
 	
 def configurePi():
     #pull config data from SQL database
@@ -98,6 +97,17 @@ start.grid(row=1,columnspan=2)
 
 
 
+
+win.update()
+
+def steptwo():
+	welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, bg='white')		
+	welcome.grid(row=1,column=0)
+	#countDown = Label(win,text= countDownText ,anchor=CENTER,font= myFont, bg='white')
+	countDown.grid(row=2,column=0, sticky="nsew")
+	button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg='white', fg='blue')
+	button.grid(row=3,column=0)
+	newstart= False
 
 endTime = time.time()+countDownIncrementer
 
