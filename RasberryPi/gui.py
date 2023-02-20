@@ -49,6 +49,7 @@ Grid.rowconfigure(win,1, weight=1)
 Grid.rowconfigure(win,2,weight=1)
 Grid.rowconfigure(win,3,weight=1)
 Grid.columnconfigure(win,0,weight=1)
+Grid.columnconfigure(win,1,weight=1)
  
 win.title("Access Control")#window name
 win.geometry('800x480')#size of window
@@ -69,86 +70,44 @@ top.grid(row=0,column=0)
 #welcome.grid(row=1,column=0)
 
 #End Session Label
-#button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg='white', fg='blue')
-
+button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg='white', fg='blue')
+#button.grid(row=3,column=0)
 
 #Buddy Label
-buddy=Label(text="Buddy Required, Swipe Another ID", anchor=CENTER, font=myFont, bg='white')
+buddy=Label(text="Buddy Required, Swipe Another ID", anchor=CENTER, font=myFont, fg='purple', bg='white')
+five=Label(text="AFTER 5PM", anchor=CENTER, font=myFont, bg='white', fg='red')
+#buddy.grid(row=3,column=0)
+#five.grid(row=2,column=0)
 
 #Reswipe Label
-reswipe=Label(text="Reswipe To Continue Session", anchor=CENTER, font=myFont, bg='white', fg='red')
+reswipe=Label(text="Reswipe To Continue Session", anchor=CENTER, font=myFont, bg='white', fg='orange')
+#reswipe.grid(row=3,column=0)
 
 #Authorized Label
-#authorized=Label(text="AUTHORIZED", anchor=CENTER, font=myFont, bg='white', fg='green')
-#not_authorized= Label(text="NOT AUTHORIZED", anchor=CENTER, font=myFont, bg='white', fg='red')
+authorized=Label(text="AUTHORIZED", anchor=CENTER, font=myFont, bg='white', fg='green')
+not_authorized= Label(text="NOT AUTHORIZED", anchor=CENTER, font=myFont, bg='white', fg='red')
+#not_authorized.grid(row=1,column=0)
 
 #User Name Label
-#welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, bg='white')
+welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, bg='white')
+#welcome.grid(row=1,column=0)
 
 #Start Label
-#start=Label(text="Swipe Card To Begin Session", anchor=CENTER, bg='white', font=myFont, fg='blue')
+start=Label(text="Swipe Card To Begin Session", anchor=CENTER, bg='white', font=myFont, fg='blue')
+start.grid(row=1,columnspan=2)
 
 
 
-def createauthorize():
-	authorized=Label(text="AUTHORIZED", anchor=CENTER, font=myFont, bg='white', fg='green')
-	authorized.grid(row=1,column=0)
-
-
-def createnauthorize():
-	not_authorized= Label(text="NOT AUTHORIZED", anchor=CENTER, font=myFont, bg='white', fg='red')
-	not_authorized.grid(row=1,column=0)
-
-
-def createwelcome():
-	welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, bg='white')
-	welcome.grid(row=1,column=0)
-
-def createstart():
-	start=Label(text="Swipe Card To Begin Session", anchor=CENTER, bg='white', font=myFont, fg='blue')
-	start.grid(row=1,column=0)
-
-def destroystart():
-	start.destroy()
-
-def createbutton():
-	button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg='white', fg='blue')
-	button.grid(row=3,column=0)
-
-def createcountdown():
-	countDown.grid(row=2,column=0, sticky="nsew")
-	countDown = Label(win,text= countDownText ,anchor=CENTER,font= myFont, bg='white') #create label for countdown
-
-
-newstart=True 
-count=0
-def stepone():
-	authorized=Label(text="AUTHORIZED", anchor=CENTER, font=myFont, bg='white', fg='green')
-	authorized.grid(row=1,column=0)
-	win.after(7000,authorized.destroy)
-
-def steptwo():
-	welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, bg='white')		
-	welcome.grid(row=1,column=0)
-	#countDown = Label(win,text= countDownText ,anchor=CENTER,font= myFont, bg='white')
-	countDown.grid(row=2,column=0, sticky="nsew")
-	button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg='white', fg='blue')
-	button.grid(row=3,column=0)
-	newstart= False
 
 endTime = time.time()+countDownIncrementer
 
 #main
 while True:
-	if newstart == True:
-		start=Label(text="Swipe Card To Begin Session", anchor=CENTER, bg='white', font=myFont, fg='blue')
-		start.grid(row=1,column=0)
-		win.after(3000, start.config(text="AUTHORIZED", fg='green'))
-		
+	
 		
 	if time.time() <= endTime:
 		countdown()
-	
+	else: countDown.config(text= time.strftime("%I:%M:%S"))
 
 
 
