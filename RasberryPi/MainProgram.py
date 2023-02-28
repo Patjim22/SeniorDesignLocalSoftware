@@ -28,20 +28,21 @@ user_2_ID = 0
 
     
 # Add all used gpio pins for configuration
-DEVICEON =9                                     #22 is green LED device On
-USER1LED =11                                    #27 user 1 #17 user 2 yellow LEDs
-USER2LED=13
-REDLED1 =19                                     #4 and 3  RED LEDS
-REDLED2 =26
-CONTROLOPTO =17                                 #2 control opto
-USBSEL =14                                      #14 usb sel
-USBENABLE = 15
-RESETBUTTON = 18
-BUTTON1 = 5
-BUTTON2 = 6
+DEVICEON =21                                     #22 is green LED device On
+USER1LED =23                                    #27 user 1 #17 user 2 yellow LEDs
+USER2LED=33
+REDLED1 =35                                     #4 and 3  RED LEDS
+REDLED2 =37
+CONTROLOPTO =11                                 #2 control opto
+USBSEL =8                                      #14 usb sel
+USBENABLE = 10
+BUZZER = 12
+BUTTON1 = 29
+BUTTON2 = 31
 
 BackUp_USER= {"200248706", "200289830"}
-channel_list = (5,6,9,11,13,14,15,17,18,19,26)              # Pin 2 needs changed
+channel_list = (5,6,9,11,13,14,15,17,18,19,26)              
+
 
 
 class ID_Check_Thread (threading.Thread):
