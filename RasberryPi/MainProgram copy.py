@@ -31,11 +31,11 @@ user_2_ID = 0
 DEVICEON =21                                     #22 is green LED device On
 USER1LED =23                                    #27 user 1 #17 user 2 yellow LEDs
 USER2LED=33
-REDLED1 =35                                     #4 and 3  RED LEDS
+DEVICEENABLED =35                                     #4 and 3  RED LEDS
 REDLED2 =37
 CONTROLOPTO =11                                 #2 control opto
-USBSEL =5                                      #14 usb sel
-USBENABLE = 7
+USBSEL =8                                      #14 usb sel
+USBENABLE = 10
 BUZZER = 12
 BUTTON1 = 29
 BUTTON2 = 31
@@ -101,7 +101,7 @@ def setupGPIO():
     GPIO.setup(channel_list, GPIO.OUT, initial =GPIO.LOW)
     GPIO.setup(BUTTON1, GPIO.IN, pull_up_down=GPIO.PUD_UP) #sets the reset to a input with a pull up resistor
     GPIO.setup(BUTTON2, GPIO.IN, pull_up_down=GPIO.PUD_UP) #sets the reset to a input with a pull up resistor
-    GPIO.output(DEVICEON,False)                                # Set power pin to on
+    GPIO.output(DEVICEON,True)                                # Set power pin to on
     # Set switch pin to defaults
     GPIO.output(USBSEL,False)                                  # USB
     GPIO.output(CONTROLOPTO,False)                             # Opto-Isolator
@@ -130,7 +130,7 @@ def enableDevice(): #enables the usb and Control OPTO issolators and starts the 
     GPIO.output(USBSEL,True)                 	# USB
     GPIO.output(USBENABLE, True)
     print("ACTIVATED")
-    GPIO.output(DEVICEON,True)                	# Device enable light
+    GPIO.output(DEVICEENABLED,True)                	# Device enable light
     endTime = time.time()+countDownIncrementer
 
 def disableDevice():
@@ -141,7 +141,7 @@ def disableDevice():
     GPIO.output(USER2LED,False)               	# User 2 led
     GPIO.output(USER1LED,False)                # User1 led
     print("DISABLED")
-    GPIO.output(DEVICEON,False)               	# Device enable light
+    GPIO.output(DEVICEENABLED,False)               	# Device enable light
     user_1_state =0
     user_2_state =0
     user_1_ID =0
