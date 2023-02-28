@@ -101,7 +101,7 @@ def setupGPIO():
     GPIO.setup(channel_list, GPIO.OUT, initial =GPIO.LOW)
     GPIO.setup(BUTTON1, GPIO.IN, pull_up_down=GPIO.PUD_UP) #sets the reset to a input with a pull up resistor
     GPIO.setup(BUTTON2, GPIO.IN, pull_up_down=GPIO.PUD_UP) #sets the reset to a input with a pull up resistor
-    GPIO.output(DEVICEON,FALSE)                                # Set power pin to on
+    GPIO.output(DEVICEON,False)                                # Set power pin to on
     # Set switch pin to defaults
     GPIO.output(USBSEL,False)                                  # USB
     GPIO.output(CONTROLOPTO,False)                             # Opto-Isolator
