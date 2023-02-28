@@ -192,7 +192,8 @@ def assignUserToMachine(card):
 
 def noBuddySwipe():#send to database that id 1 didn't have a buddy
     user_1_ID
-    
+
+setupGPIO()    
 T1 = True
 T2 = True
 
