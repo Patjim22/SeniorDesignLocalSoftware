@@ -34,8 +34,8 @@ USER2LED=33
 REDLED1 =35                                     #4 and 3  RED LEDS
 REDLED2 =37
 CONTROLOPTO =11                                 #2 control opto
-USBSEL =8                                      #14 usb sel
-USBENABLE = 10
+USBSEL =5                                      #14 usb sel
+USBENABLE = 7
 BUZZER = 12
 BUTTON1 = 29
 BUTTON2 = 31
@@ -128,6 +128,7 @@ def enableDevice(): #enables the usb and Control OPTO issolators and starts the 
     global endTime
     GPIO.output(CONTROLOPTO,True)              # Opto
     GPIO.output(USBSEL,True)                 	# USB
+    GPIO.output(USBENABLE, True)
     print("ACTIVATED")
     GPIO.output(DEVICEON,True)                	# Device enable light
     endTime = time.time()+countDownIncrementer
@@ -136,6 +137,7 @@ def disableDevice():
     global user_1_state , user_2_state,user_2_ID, user_1_ID, endTime, userName
     GPIO.output(CONTROLOPTO,False)             # Opto
     GPIO.output(USBSEL,False)                	# USB
+    GPIO.output(USBENABLE, False)
     GPIO.output(USER2LED,False)               	# User 2 led
     GPIO.output(USER1LED,False)                # User1 led
     print("DISABLED")
