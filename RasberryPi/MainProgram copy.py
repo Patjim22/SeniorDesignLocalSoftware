@@ -41,7 +41,7 @@ BUTTON1 = 29
 BUTTON2 = 31
 
 BackUp_USER= {"200248706", "200289830"}
-channel_list = (5,7,21,23,33,35,37,11,8,10,12,29,31)              
+channel_list = (21,23,33,35,37,11,8,10,12,29,31)              
 
 
 
@@ -141,14 +141,13 @@ def disableDevice():
     GPIO.output(USBENABLE, True)
     GPIO.output(USER2LED,False)               	# User 2 led
     GPIO.output(USER1LED,False)                # User1 led
-    print("DISABLED")
     GPIO.output(DEVICEENABLED,False)               	# Device enable light
     user_1_state =0
     user_2_state =0
     user_1_ID =0
     user_2_ID =0
     userName =""
-    
+    print("DISABLED")
     endTime=0
 
 def pauseDevice():#disables optoControl

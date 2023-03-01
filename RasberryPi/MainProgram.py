@@ -28,20 +28,20 @@ user_2_ID = 0
 
     
 # Add all used gpio pins for configuration
-DEVICEON =9                                     #22 is green LED device On
-USER1LED =11                                    #27 user 1 #17 user 2 yellow LEDs
-USER2LED=13
-REDLED1 =19                                     #4 and 3  RED LEDS
-REDLED2 =26
-CONTROLOPTO =17                                 #2 control opto
-USBSEL =14                                      #14 usb sel
-USBENABLE = 15
-BUZZER = 18
-BUTTON1 = 5
-BUTTON2 = 6
+DEVICEON =21                                     #22 is green LED device On
+USER1LED =23                                    #27 user 1 #17 user 2 yellow LEDs
+USER2LED=33
+DEVICEENABLED =35                                     #4 and 3  RED LEDS
+REDLED2 =37
+CONTROLOPTO =11                                 #2 control opto
+USBSEL =8                                      #14 usb sel
+USBENABLE = 10                                  #when high disables usb ports
+BUZZER = 12
+BUTTON1 = 29
+BUTTON2 = 31
 
 BackUp_USER= {"200248706", "200289830"}
-channel_list = (5,6,9,11,13,14,15,17,18,19,26)              
+channel_list = (21,23,33,35,37,11,8,10,12,29,31)                
 
 
 
@@ -95,15 +95,17 @@ class Read_Card_Tread (threading.Thread): #reads the card
             time.sleep(4)
             
 def setupGPIO():
-    #GPIO.setmode(GPIO.BOARD)                                   #Use Board pin numbers
-    #GPIO.setwarnings(False)                                    # Suppresses warning messages from output.
-    # Sets all GPIO pins in the chanel list as an output
-    #GPIO.setup(channel_list, GPIO.OUT, initial =GPIO.LOW)
-    #GPIO.setup(RESETBUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP) #sets the reset to a input with a pull up resistor
-    #GPIO.output(DEVICEON,FALSE)                                # Set power pin to on
-    # Set switch pin to defaults
-    #GPIO.output(USBSEL,False)                                  # USB
-    #GPIO.output(CONTROLOPTO,False)                             # Opto-Isolator
+    # GPIO.setmode(GPIO.BOARD)                                   #Use Board pin numbers
+    # GPIO.setwarnings(False)                                    # Suppresses warning messages from output.
+    # # Sets all GPIO pins in the chanel list as an output
+    # GPIO.setup(channel_list, GPIO.OUT, initial =GPIO.LOW)
+    # GPIO.setup(BUTTON1, GPIO.IN, pull_up_down=GPIO.PUD_UP) #sets the reset to a input with a pull up resistor
+    # GPIO.setup(BUTTON2, GPIO.IN, pull_up_down=GPIO.PUD_UP) #sets the reset to a input with a pull up resistor
+    # GPIO.output(DEVICEON,True)                                # Set power pin to on
+    # # Set switch pin to defaults
+    # GPIO.output(USBSEL,False)                                  # USB
+    # GPIO.output(USBENABLE,False)
+    # GPIO.output(CONTROLOPTO,False)                             # Opto-Isolator
     print("GPIO SETUP")
 
 def countdown(): #does the countdown when it is required
@@ -125,26 +127,27 @@ def configurePi():#pull config data from SQL database
 
 def enableDevice(): #enables the usb and Control OPTO issolators and starts the countdown
     global endTime
-    #GPIO.output(CONTROLOPTO,True)              # Opto
-	#GPIO.output(USBSEL,True)                 	# USB
-    print("ACTIVATED")
-    #GPIO.output(DEVICEON,True)                	# Device enable light
+    # GPIO.output(CONTROLOPTO,True)              # Opto
+    # GPIO.output(USBSEL,True)                 	# USB
+    # GPIO.output(USBENABLE, False)
+    # print("ACTIVATED")
+    # GPIO.output(DEVICEENABLED,True)                	# Device enable light
     endTime = time.time()+countDownIncrementer
 
 def disableDevice():
     global user_1_state , user_2_state,user_2_ID, user_1_ID, endTime, userName
-    #GPIO.output(CONTROLOPTO,False)             # Opto
-    #GPIO.output(USBSEL,False)                	# USB
-    #GPIO.output(USER2LED,False)               	# User 2 led
-    #GPIO.output(USER1LED,False)                # User1 led
-    print("DISABLED")
-    #GPIO.output(DEVICEON,False)               	# Device enable light
+    # GPIO.output(CONTROLOPTO,False)             # Opto
+    # GPIO.output(USBSEL,False)                	# USB
+    # GPIO.output(USBENABLE, True)
+    # GPIO.output(USER2LED,False)               	# User 2 led
+    # GPIO.output(USER1LED,False)                # User1 led
+    # GPIO.output(DEVICEENABLED,False)               	# Device enable light
     user_1_state =0
     user_2_state =0
     user_1_ID =0
     user_2_ID =0
     userName =""
-    
+    print("DISABLED")
     endTime=0
 
 def pauseDevice():#disables optoControl
