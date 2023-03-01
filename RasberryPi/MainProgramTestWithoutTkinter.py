@@ -113,7 +113,7 @@ def countdown(): #does the countdown when it is required
     currentTime =endTime-time.time()                            #measures the endtime vs current time
     #currentTime = time.time()
     if(currentTime >0):
-        countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
+        print(str(int(currentTime/60)) +":" +str(int(currentTime%60)))
     else:
         endTime =0
         disableDevice()
@@ -216,8 +216,8 @@ th2.start()
 while T1:
     if(endTime!=0):
         countdown()
-    else:
-        print(time.strftime("%I:%M:%S")) #displays time in 12 hour format
+    #else:
+        #print(time.strftime("%I:%M:%S")) #displays time in 12 hour format
     
     if(buddySwipeReuiredBy!=0):
         currentTime =buddySwipeReuiredBy-time.time() 
@@ -228,10 +228,10 @@ while T1:
             buddySwipeReuiredBy=0
             noBuddySwipe()
             
-    if(userName != ""):
-        print("Welcome: "+ userName)
-    else:
-        print("Welcome USER!")
+    #if(userName != ""):
+    #    print("Welcome: "+ userName)
+    #else:
+    #    print("Welcome USER!")
     
     
     time.sleep(.5)  #sleeps for 1/2 a second 
