@@ -121,6 +121,7 @@ class Read_Card_Tread (threading.Thread): #reads the card
         dev.grab()
 
         for event in dev.read_loop():
+            print("card")
             if event.type == ecodes.EV_KEY: 
                 data = categorize(event) # Save the event temporarily to introspect it 
                 if data.scancode == 42: 
@@ -263,6 +264,7 @@ th1.start()
 th2.start()
 
 while T1:
+    print("MAin")
     if(endTime!=0):
         countdown()
     #else:
