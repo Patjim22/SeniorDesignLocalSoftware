@@ -259,7 +259,6 @@ th2 = Read_Card_Tread("T2",2000)
 th1.start()
 th2.start()
 
-GPIO.output(BUZZER, True)
 
 while T1:
     if(endTime!=0):
