@@ -113,6 +113,9 @@ def countdown(): #does the countdown when it is required
     currentTime =endTime-time.time()                            #measures the endtime vs current time
     #currentTime = time.time()
     if(currentTime >0):
+        if(currentTime<=60):
+            print("buzzer on")
+            #GPIO.output(BUZZER, True)
         countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
     else:
         endTime =0
