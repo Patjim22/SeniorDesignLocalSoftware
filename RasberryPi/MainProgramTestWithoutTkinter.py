@@ -121,7 +121,6 @@ class Read_Card_Tread (threading.Thread): #reads the card
         dev.grab()
 
         for event in dev.read_loop():
-            print("card")
             if event.type == ecodes.EV_KEY: 
                 data = categorize(event) # Save the event temporarily to introspect it 
                 if data.scancode == 42: 
@@ -137,7 +136,7 @@ class Read_Card_Tread (threading.Thread): #reads the card
                     if (data.scancode != 42) and (data.scancode != 28): 
                      line += key_lookup 
                     if(data.scancode == 28): 
-                     #print (line)   # Print it all out! 
+                     print (line)   # Print it all out! 
                      regSearch =re.compile('\+.*')
                      cardNumber = regSearch.match(line)
                      print(cardNumber)
@@ -275,7 +274,6 @@ th1.start()
 th2.start()
 
 while T1:
-    print("MAin")
     if(endTime!=0):
         countdown()
     #else:
