@@ -114,7 +114,7 @@ class Read_Card_Tread (threading.Thread): #reads the card
     50: u'M', 51: u'<', 52: u'>', 53: u'?', 54: u'RSHFT', 56: u'LALT', 57: u' ', 100: u'RALT' 
 } 
         #setup vars 
-        x = '' 
+        line = '' 
         caps = False 
 
         dev =evdev.InputDevice('/dev/input/event0')
@@ -135,11 +135,22 @@ class Read_Card_Tread (threading.Thread): #reads the card
                     else: 
                      key_lookup = u'{}'.format(scancodes.get(data.scancode)) or u'UNKNOWN:[{}]'.format(data.scancode) # Lookup or return UNKNOWN:XX 
                     if (data.scancode != 42) and (data.scancode != 28): 
-                     x += key_lookup 
+                     line += key_lookup 
                     if(data.scancode == 28): 
-                     print (x)   # Print it all out! 
-                     #user_authentication(x)
-                     x = ''
+                     #print (line)   # Print it all out! 
+                     regSearch =re.compile('\+.*')
+                     cardNumber = regSearch.match(line)
+                     print(cardNumber)
+                     if(cardNumber!=None):
+                        card = cardNumber.string[1:10].rstrip()
+                        print(cardNumber.group()[1:10].rstrip())
+                        print()
+                     else:
+                        print(len(line))
+                        if(len(line)==10):
+                            card = line[0:9]
+                            print(line[0:9])
+                     line = ''
             time.sleep(4)
             
 def setupGPIO():
