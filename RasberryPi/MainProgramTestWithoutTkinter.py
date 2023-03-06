@@ -142,7 +142,7 @@ class Read_Card_Tread (threading.Thread): #reads the card
                      regSearch =re.compile('\+.*')
                      cardNumber = regSearch.match(line)
                      if(cardNumber==None):
-                        regSearch =re.compile('\RSHFT=.*')
+                        regSearch =re.compile('RSHFT=.*')
                         cardNumber = regSearch.match(line)
                      print(cardNumber)
                      if(cardNumber!=None):
@@ -163,7 +163,7 @@ def setupGPIO():
     # Sets all GPIO pins in the chanel list as an output
     GPIO.setup(channel_list, GPIO.OUT, initial =GPIO.LOW)
     GPIO.setup(BUTTON1, GPIO.IN, pull_up_down=GPIO.PUD_UP) #sets the reset to a input with a pull up resistor
-    GPIO.setup(BUTTON2, GPIO.IN, pull_up_down=GPIO.PUD_UP) #sets the reset to a input with a pull up resistor
+    GPIO.setup(BUTTON2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) #sets the reset to a input with a pull up resistor
     GPIO.output(DEVICEON,True)                                # Set power pin to on
     # Set switch pin to defaults
     GPIO.output(USBSEL,False)                                  # USB
