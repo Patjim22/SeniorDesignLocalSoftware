@@ -205,6 +205,7 @@ def disableDevice():
     GPIO.output(USER1LED,False)                # User1 led
     print("DISABLED")
     GPIO.output(DEVICEENABLED,False)               	# Device enable light
+    GPIO.output(BUZZER, False)
     user_1_state =0
     user_2_state =0
     user_1_ID =0
@@ -295,7 +296,9 @@ while T1:
         else:
             buddySwipeReuiredBy=0
             noBuddySwipe()
-            
+    
+    if(GPIO.input(BUTTON2)):
+        disableDevice()
     #if(userName != ""):
     #    print("Welcome: "+ userName)
     #else:
