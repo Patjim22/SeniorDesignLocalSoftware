@@ -150,7 +150,7 @@ class Read_Card_Tread (threading.Thread): #reads the card
                         card = cardNumber.string[1:10].rstrip()
                         #print(cardNumber.group()[1:10].rstrip())
                         if(rshiftCheck):
-                            card = cardNumber.string[7:16].rstrip()
+                            card = cardNumber.string[6:15].rstrip()
                             print(card)
                         print()
                      else:
