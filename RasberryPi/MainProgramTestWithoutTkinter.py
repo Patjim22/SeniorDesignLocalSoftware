@@ -143,7 +143,7 @@ class Read_Card_Tread (threading.Thread): #reads the card
                      cardNumber = regSearch.match(line)
                      if(cardNumber==None):
                         rshiftCheck =True
-                        regSearch =re.compile('\RSHFT=.*')
+                        regSearch =re.compile('RSHFT=.*')
                         cardNumber = regSearch.match(line)
                      print(cardNumber)
                      if(cardNumber!=None):
