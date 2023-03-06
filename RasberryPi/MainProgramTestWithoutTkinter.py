@@ -142,12 +142,15 @@ class Read_Card_Tread (threading.Thread): #reads the card
                      regSearch =re.compile('\+.*')
                      cardNumber = regSearch.match(line)
                      if(cardNumber==None):
+                        rshiftCheck =True
                         regSearch =re.compile('RSHFT=.*')
                         cardNumber = regSearch.match(line)
                      print(cardNumber)
                      if(cardNumber!=None):
                         card = cardNumber.string[1:10].rstrip()
                         print(cardNumber.group()[1:10].rstrip())
+                        if(rshiftCheck):
+                            card = cardNumber.string[7:16]
                         print()
                      else:
                         print(len(line))
