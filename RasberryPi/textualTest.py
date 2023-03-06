@@ -27,4 +27,4 @@ class WelcomeApp(App):
 if __name__ == "__main__":
     app = WelcomeApp()
     app.run()
-    countDown.config(text= time.strftime("%I:%M:%S")) #displays time in 12 hour format
+    Label.config(text= time.strftime("%I:%M:%S")) #displays time in 12 hour format

@@ -5,6 +5,7 @@ import re
 from tkinter import *
 from tkinter import font
 #import RPi.GPIO as GPIO
+from sql_connection import *
 
 card = "0"
 global start 
@@ -157,19 +158,19 @@ def pauseDevice():#disables optoControl
     #GPIO.output(CONTROLOPTO,False)             # Opto
     print("Paused device")
 
-def check_if_authorized(card):
-    global userName, user_1_state, user_2_state
-    USERS ={"100019744","100019747"} #visitor 1 id #visitor 4 id
-    #write user compatison code for sql in this
-    userName
-    if card in BackUp_USER:
-        userName = "Admin"
-        user_1_state=1
-        user_2_state=1
-        return True
-    if card in USERS:
-        return True
-    return False	# function returns true if authorized user otherwise false
+# def check_if_authorized(card):
+#     global userName, user_1_state, user_2_state
+#     USERS ={"100019744","100019747"} #visitor 1 id #visitor 4 id
+#     #write user compatison code for sql in this
+#     userName
+#     if card in BackUp_USER:
+#         userName = "Admin"
+#         user_1_state=1
+#         user_2_state=1
+#         return True
+#     if card in USERS:
+#         return True
+#     return False	# function returns true if authorized user otherwise false
 
 def assignUserToMachine(card):
     global user_1_state , user_2_state, user_1_ID, user_2_ID, buddySwipeReuiredBy

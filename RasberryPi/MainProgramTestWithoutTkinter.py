@@ -7,6 +7,7 @@ import re
 import RPi.GPIO as GPIO
 import evdev
 from evdev import *
+from sql_connection import *
 
 card = "0"
 global start 
@@ -150,7 +151,7 @@ class Read_Card_Tread (threading.Thread): #reads the card
                             card = line[0:9]
                             print(line[0:9])
                      line = ''
-            time.sleep(4)
+            #time.sleep(4)
             
 def setupGPIO():
     GPIO.setmode(GPIO.BOARD)                                   #Use Board pin numbers
@@ -176,6 +177,7 @@ def countdown(): #does the countdown when it is required
         print(str(int(currentTime/60)) +":" +str(int(currentTime%60)))
     else:
         endTime =0
+        GPIO.output(BUZZER, False)
         disableDevice()
 	
 def configurePi():#pull config data from SQL database
@@ -215,32 +217,37 @@ def pauseDevice():#disables optoControl
     GPIO.output(CONTROLOPTO,False)             # Opto
     print("Paused device")
 
-def check_if_authorized(card):
-    global userName, user_1_state, user_2_state
-    USERS ={"100019744","100019747"} #visitor 1 id #visitor 4 id
-    #write user compatison code for sql in this
-    userName
-    if card in BackUp_USER:
-        userName = "Admin"
-        user_1_state=1
-        user_2_state=1
-        return True
-    if card in USERS:
-        return True
-    return False	# function returns true if authorized user otherwise false
+# def check_if_authorized(card):
+#     global userName, user_1_state, user_2_state
+#     USERS ={"100019744","100019747"} #visitor 1 id #visitor 4 id
+#     #write user compatison code for sql in this
+#     userName
+#     if card in BackUp_USER:
+#         userName = "Admin"
+#         user_1_state=1
+#         user_2_state=1
+#         return True
+#     if card in USERS:
+#         return True
+#     return False	# function returns true if authorized user otherwise false
 
 def assignUserToMachine(card):
     global user_1_state , user_2_state, user_1_ID, user_2_ID, buddySwipeReuiredBy
     authorized = check_if_authorized(card)
+    if(card in BackUp_USER):
+        user_1_state =1
+        user_2_state=1
     if(authorized):
         if(user_1_state==0):
             user_1_state=1
             user_1_ID= card
+            GPIO.output(USER1LED,True)
         if(user_1_state==1):
             if(card != user_1_ID):
                 user_2_state=1
                 user_2_ID = card
                 buddySwipeReuiredBy=0
+                GPIO.output(USER2LED,True)
         if(time.localtime().tm_hour<endOfWorkingHours and time.localtime().tm_hour >=beginningOfWorkHours):#during working houres only 1 user is needed
             if(user_1_state or user_2_state):
                 enableDevice()     
@@ -252,6 +259,7 @@ def assignUserToMachine(card):
                 buddySwipeReuiredBy=time.time()+twoSwipeTime     
     else:
         print("non-authorized user")
+        GPIO.output(USER1LED,False)
 
 def noBuddySwipe():#send to database that id 1 didn't have a buddy
     user_1_ID
