@@ -21,6 +21,7 @@ userName =""
 countDownMinutes=1
 endOfWorkingHours=17	#5pm
 beginningOfWorkHours=8	#8am
+TIMETOTURNBUZZERON =10 #in seconds
 user_1_state =0
 user_2_state = 0
 user_1_ID = 0
@@ -140,6 +141,9 @@ class Read_Card_Tread (threading.Thread): #reads the card
                      print (line)   # Print it all out! 
                      regSearch =re.compile('\+.*')
                      cardNumber = regSearch.match(line)
+                     if(cardNumber==None):
+                        regSearch =re.compile('\RSHFT=.*')
+                        cardNumber = regSearch.match(line)
                      print(cardNumber)
                      if(cardNumber!=None):
                         card = cardNumber.string[1:10].rstrip()
@@ -159,7 +163,7 @@ def setupGPIO():
     # Sets all GPIO pins in the chanel list as an output
     GPIO.setup(channel_list, GPIO.OUT, initial =GPIO.LOW)
     GPIO.setup(BUTTON1, GPIO.IN, pull_up_down=GPIO.PUD_UP) #sets the reset to a input with a pull up resistor
-    GPIO.setup(BUTTON2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) #sets the reset to a input with a pull up resistor
+    GPIO.setup(BUTTON2, GPIO.IN, pull_up_down=GPIO.PUD_) #sets the reset to a input with a pull up resistor
     GPIO.output(DEVICEON,True)                                # Set power pin to on
     # Set switch pin to defaults
     GPIO.output(USBSEL,False)                                  # USB
@@ -172,7 +176,7 @@ def countdown(): #does the countdown when it is required
     currentTime =endTime-time.time()                            #measures the endtime vs current time
     #currentTime = time.time()
     if(currentTime >0):
-        if(currentTime<=60):
+        if(currentTime<=TIMETOTURNBUZZERON):
             GPIO.output(BUZZER, True)
         print(str(int(currentTime/60)) +":" +str(int(currentTime%60)))
     else:
