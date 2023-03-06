@@ -5,6 +5,8 @@ device_id = 1
 BackUp_USER= {200248706, 200289830}
 def check_if_authorized(card):# function returns true if authorized user otherwise false
     print("ENTER")
+    if(card in BackUp_USER):
+        return True
     try:
         conn = mariadb.connect(
                 user="control_client",
