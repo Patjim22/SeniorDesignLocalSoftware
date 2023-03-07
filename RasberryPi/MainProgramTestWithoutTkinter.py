@@ -268,10 +268,13 @@ def assignUserToMachine(card):
                 buddySwipeReuiredBy=time.time()+twoSwipeTime     
     else:
         print("non-authorized user")
-        GPIO.output(USER1LED,False)
+        
 
 def noBuddySwipe():#send to database that id 1 didn't have a buddy
-    user_1_ID
+    global user_1_state, user_1_ID
+    GPIO.output(USER1LED,False)
+    user_1_state= 0
+    user_1_ID= 0
 
 setupGPIO()    
 T1 = True
