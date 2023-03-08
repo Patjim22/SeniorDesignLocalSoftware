@@ -138,7 +138,8 @@ class Read_Card_Tread (threading.Thread): #reads the card
                     if (data.scancode != 42) and (data.scancode != 28): 
                      line += key_lookup 
                     if(data.scancode == 28): 
-                     print (line)   # Print it all out! 
+                     print (line)   # Print it all out!
+                     rshiftCheck=False 
                      regSearch =re.compile('\+.*')
                      cardNumber = regSearch.match(line)
                      if(cardNumber==None):
@@ -353,7 +354,7 @@ while T1:
         welcome.config(text="Welcome: "+ userName)
     else:
         welcome.config(text="Welcome USER!")
-        print("Welcome USER!")
+        #print("Welcome USER!")
     
     win.update()
     time.sleep(.5)  #sleeps for 1/2 a second 
