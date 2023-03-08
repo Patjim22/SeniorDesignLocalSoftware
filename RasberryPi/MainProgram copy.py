@@ -247,7 +247,8 @@ def assignUserToMachine(card):
         user_1_state =1
         user_2_state=1
         user_1_ID = card
-        
+        GPIO.output(USER1LED,True)
+        GPIO.output(USER2LED,True)
     if(authorized):
         if(user_1_state==0):
             user_1_state=1
