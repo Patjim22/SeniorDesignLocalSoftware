@@ -41,11 +41,11 @@ CONTROLOPTO =11                                 #2 control opto
 USBSEL =8                                      #14 usb sel
 USBENABLE = 10                                  #when high disables usb ports
 BUZZER = 12
-BUTTON1 = 29
-BUTTON2 = 31
+BUTTON1 = 29                                    #reset device 
+BUTTON2 = 31                                    #top panel button
 
 BackUp_USER= {"200248706", "200289830"}
-channel_list = (5,7,21,23,33,35,37,11,8,10,12,29,31)              
+channel_list = (21,23,33,35,37,11,8,10,12,29,31)              
 
 
 
@@ -219,7 +219,6 @@ def disableDevice():
     user_1_ID =0
     user_2_ID =0
     userName =""
-    
     endTime=0
 
 def pauseDevice():#disables optoControl
@@ -319,16 +318,6 @@ buddy=Label(text="Buddy Required, Swipe Another ID", anchor=CENTER, font=myFont,
 #Reswipe Label
 reswipe=Label(text="Reswipe To Continue Session", anchor=CENTER, font=myFont, bg='white', fg='red')
 
-#Authorized Label
-#authorized=Label(text="AUTHORIZED", anchor=CENTER, font=myFont, bg='white', fg='green')
-#not_authorized= Label(text="NOT AUTHORIZED", anchor=CENTER, font=myFont, bg='white', fg='red')
-
-#User Name Label
-#welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, bg='white')
-
-#Start Label
-#start=Label(text="Swipe Card To Begin Session", anchor=CENTER, bg='white', font=myFont, fg='blue')
-
    
     
 configurePi()
@@ -353,7 +342,6 @@ while T1:
             #print you have blank time to swipe
             print("Time for Buddy Swipe: "+str(int(currentTime/60)) +":" +str(int(currentTime%60)))
             countDown.config(text="Time for Buddy Swipe: "+str(int(currentTime/60)) +":" +str(int(currentTime%60)))
-
         else:
             buddySwipeReuiredBy=0
             noBuddySwipe()
@@ -362,13 +350,13 @@ while T1:
         print("Button 2")
         disableDevice()
     if(userName != ""):
-        print("Welcome: "+ userName)
+        welcome.config(text="Welcome: "+ userName)
     else:
+        welcome.config(text="Welcome USER!")
         print("Welcome USER!")
     
     win.update()
     time.sleep(.5)  #sleeps for 1/2 a second 
-
 
 win.destroy()
 print("Exit")
