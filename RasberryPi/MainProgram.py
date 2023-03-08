@@ -4,9 +4,9 @@ import sys
 import re
 from tkinter import *
 from tkinter import font
-# import RPi.GPIO as GPIO
-# import evdev
-# from evdev import *
+import RPi.GPIO as GPIO
+import evdev
+from evdev import *
 from sql_connection import *
 
 card = "0"
