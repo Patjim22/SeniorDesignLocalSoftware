@@ -246,6 +246,8 @@ def assignUserToMachine(card):
     if(card in BackUp_USER):
         user_1_state =1
         user_2_state=1
+        user_1_ID = card
+        
     if(authorized):
         if(user_1_state==0):
             user_1_state=1
