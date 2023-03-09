@@ -2,9 +2,14 @@ import threading
 import time
 import sys
 import re
+import requests
+import json
+from getmac import get_mac_address
 from tkinter import *
 from tkinter import font
 #import RPi.GPIO as GPIO
+
+API_HEADERS = { "MAC" : get_mac_address() }
 
 card = "0"
 global start 
@@ -122,10 +127,17 @@ def countdown(): #does the countdown when it is required
         disableDevice()
 	
 def configurePi():#pull config data from SQL database
-    countDownMinutes # should be editable to change the length of the countdown
-    endOfWorkingHours # changes the end time of the makerspace working hours
-    beginningOfWorkHours # changes the start time of the makerspace working hours
-    twoSwipeTime #deault is 10sec change to give buddy more or less time to swipe after first swipe
+    CONFIG_URL = "http://localhost:8082/config.php"
+    config_response = requests.get(CONFIG_URL, headers=API_HEADERS);
+    if config_response.status_code == 200:
+        config_values = config_response.json();
+        countDownMinutes = config_values['countDownMinutes'] # should be editable to change the length of the countdown
+        endOfWorkingHours = config_values['endOfWorkingHours']  # changes the end time of the makerspace working hours
+        beginningOfWorkHours = config_values['beginningOfWorkHours']  # changes the start time of the makerspace working hours
+        twoSwipeTime = config_values['twoSwipeTime']  #deault is 10sec change to give buddy more or less time to swipe after first swipe
+    else:
+        print(config_response)
+        print(config_response.text)
     return
 
 def enableDevice(): #enables the usb and Control OPTO issolators and starts the countdown
