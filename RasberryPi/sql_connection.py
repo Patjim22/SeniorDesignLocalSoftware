@@ -7,7 +7,7 @@ API_HEADERS = { "MAC" : get_mac_address() }
 device_id = 1
 BackUp_USER= {200248706, 200289830}
 def check_if_authorized(card):# function returns true if authorized user otherwise false
-    try {
+    try:
         Users = { "Users": [ card ] }
         print(json.dumps(Users))
         AUTH_URL = "http://localhost:8082/auth_user.php"
@@ -21,7 +21,6 @@ def check_if_authorized(card):# function returns true if authorized user otherwi
             return True
         else:
             return False
-    } catch (Exception e) {
+    except Exception as e:
         print(repr(e))
         return False
-    }

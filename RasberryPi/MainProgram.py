@@ -127,18 +127,17 @@ def countdown(): #does the countdown when it is required
         disableDevice()
 	
 def configurePi():#pull config data from SQL database
-    try {
-    CONFIG_URL = "http://localhost:8082/config.php"
-    config_response = requests.get(CONFIG_URL, headers=API_HEADERS);
-    if config_response.status_code == 200:
-        config_values = config_response.json();
-        countDownMinutes = config_values['countDownMinutes'] # should be editable to change the length of the countdown
-        endOfWorkingHours = config_values['endOfWorkingHours']  # changes the end time of the makerspace working hours
-        beginningOfWorkHours = config_values['beginningOfWorkHours']  # changes the start time of the makerspace working hours
-        twoSwipeTime = config_values['twoSwipeTime']  #deault is 10sec change to give buddy more or less time to swipe after first swipe
-    } catch (Exception e) {
+    try:
+        CONFIG_URL = "http://localhost:8082/config.php"
+        config_response = requests.get(CONFIG_URL, headers=API_HEADERS);
+        if config_response.status_code == 200:
+            config_values = config_response.json();
+            countDownMinutes = config_values['countDownMinutes'] # should be editable to change the length of the countdown
+            endOfWorkingHours = config_values['endOfWorkingHours']  # changes the end time of the makerspace working hours
+            beginningOfWorkHours = config_values['beginningOfWorkHours']  # changes the start time of the makerspace working hours
+            twoSwipeTime = config_values['twoSwipeTime']  #deault is 10sec change to give buddy more or less time to swipe after first swipe
+    except Exception as e:
         print(repr(e))
-    }
     return
 
 def enableDevice(): #enables the usb and Control OPTO issolators and starts the countdown
