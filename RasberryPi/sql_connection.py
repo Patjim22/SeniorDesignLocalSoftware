@@ -1,5 +1,6 @@
 import requests
 import json
+import os
 from getmac import get_mac_address
 
 API_HEADERS = { "MAC" : get_mac_address() }
@@ -10,7 +11,7 @@ def check_if_authorized(card):# function returns true if authorized user otherwi
     try:
         Users = { "Users": [ card ] }
         print(json.dumps(Users))
-        AUTH_URL = "http://localhost:8082/auth_user.php"
+        AUTH_URL = "http://" + os.getenv('HOST', 'localhost') + ":8082/auth_user.php"
         auth_response = requests.post(AUTH_URL, headers=API_HEADERS, data=json.dumps(Users));
         if auth_response.status_code == 200:
             print(auth_response.text)

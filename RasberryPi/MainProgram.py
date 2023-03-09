@@ -4,6 +4,7 @@ import sys
 import re
 import requests
 import json
+import os
 from getmac import get_mac_address
 from tkinter import *
 from tkinter import font
@@ -128,7 +129,7 @@ def countdown(): #does the countdown when it is required
 	
 def configurePi():#pull config data from SQL database
     try:
-        CONFIG_URL = "http://localhost:8082/config.php"
+        CONFIG_URL = "http://" + os.getenv('HOST', 'localhost') + ":8082/config.php"
         config_response = requests.get(CONFIG_URL, headers=API_HEADERS);
         if config_response.status_code == 200:
             config_values = config_response.json();
