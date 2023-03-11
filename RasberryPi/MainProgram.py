@@ -26,6 +26,7 @@ twoSwipeTime = 20        #used to hold how long to wait for a buddy to swipe
 buddySwipeReuiredBy=0   #holds the time to cancel out and say you were rejected because no buddy
 userName =""
 countDownMinutes=1
+countDownIncrementer = countDownMinutes*60 #number of minutes wanted goes where the 1 is
 endOfWorkingHours=17	#5pm
 beginningOfWorkHours=8	#8am
 TIMETOTURNBUZZERON =10 #in seconds
@@ -206,6 +207,7 @@ def configurePi():#pull config data from SQL database
             endOfWorkingHours = config_values['endOfWorkingHours']  # changes the end time of the makerspace working hours
             beginningOfWorkHours = config_values['beginningOfWorkHours']  # changes the start time of the makerspace working hours
             twoSwipeTime = config_values['twoSwipeTime']  #deault is 10sec change to give buddy more or less time to swipe after first swipe
+            countDownIncrementer = countDownMinutes*60 #number of minutes wanted goes where the 1 is
     except Exception as e:
         print(repr(e))
     return
@@ -306,32 +308,55 @@ Grid.rowconfigure(win,1, weight=1)
 Grid.rowconfigure(win,2,weight=1)
 Grid.rowconfigure(win,3,weight=1)
 Grid.columnconfigure(win,0,weight=1)
+Grid.columnconfigure(win,1,weight=1)
  
 win.title("Access Control")#window name
 win.geometry('800x480')#size of window
+win.configure(bg='white')
 countDownText = "count"
-countDown = Label(win,text= countDownText ,anchor=CENTER,font= myFont, bg="white") #create label for countdown
+countDown = Label(win,text= countDownText ,anchor=CENTER,font= myFont, bg='white') #create label for countdown
 #countDown.pack()
-countDown.grid(row=2,column=0, sticky="nsew")#puts the countdown to the center of the screen
-
+#countDown.grid(row=2,column=0, sticky="nsew")#puts the countdown to the center of the screen
+exitButton  = Button(win, text = "Exit", font = myFont, command = exitProgram, height =2 , width = 6) 
+#exitButton.pack(side = BOTTOM)
 
 #Title Label
 top= Label(text="ECE Makerspace",anchor=E,font=myFont, fg="white", bg="red")
 top.grid(row=0,column=0)
 
 #User Name Label
-welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, bg="white")
-welcome.grid(row=1,column=0)
+#welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, bg='white')
+#welcome.grid(row=1,column=0)
 
 #End Session Label
-button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg="white")
-button.grid(row=3,column=0)
+button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg='white', fg='blue')
+#button.grid(row=3,column=0)
 
 #Buddy Label
-buddy=Label(text="Buddy Required, Swipe Another ID", anchor=CENTER, font=myFont, bg='white')
+buddy=Label(text="Buddy Required, Swipe Another ID", anchor=CENTER, font=myFont, fg='purple', bg='white')
+five=Label(text="AFTER 5PM", anchor=CENTER, font=myFont, bg='white', fg='red')
+#buddy.grid(row=3,column=0)
+#five.grid(row=2,column=0)
 
 #Reswipe Label
-reswipe=Label(text="Reswipe To Continue Session", anchor=CENTER, font=myFont, bg='white', fg='red')
+reswipe=Label(text="Reswipe To Continue Session", anchor=CENTER, font=myFont, bg='white', fg='orange')
+#reswipe.grid(row=3,column=0)
+
+#Authorized Label
+authorized=Label(text="AUTHORIZED", anchor=CENTER, font=myFont, bg='white', fg='green')
+not_authorized= Label(text="NOT AUTHORIZED", anchor=CENTER, font=myFont, bg='white', fg='red')
+#not_authorized.grid(row=1,column=0)
+
+#User Name Label
+welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, bg='white')
+#welcome.grid(row=1,column=0)
+
+#Start Label
+start=Label(text="Swipe Card To Begin Session", anchor=CENTER, bg='white', font=myFont, fg='blue')
+start.grid(row=1,columnspan=2)
+
+
+
 
    
     
