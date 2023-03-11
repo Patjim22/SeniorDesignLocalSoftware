@@ -315,10 +315,7 @@ win.geometry('800x480')#size of window
 win.configure(bg='white')
 countDownText = "count"
 countDown = Label(win,text= countDownText ,anchor=CENTER,font= myFont, bg='white') #create label for countdown
-#countDown.pack()
-#countDown.grid(row=2,column=0, sticky="nsew")#puts the countdown to the center of the screen
-exitButton  = Button(win, text = "Exit", font = myFont, command = exitProgram, height =2 , width = 6) 
-#exitButton.pack(side = BOTTOM)
+
 
 #Title Label
 top= Label(text="ECE Makerspace",anchor=E,font=myFont, fg="white", bg="red")
