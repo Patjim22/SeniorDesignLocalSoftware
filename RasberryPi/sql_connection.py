@@ -6,7 +6,6 @@ from getmac import get_mac_address
 API_HEADERS = { "MAC" : get_mac_address() }
 
 device_id = 1
-BackUp_USER= {200248706, 200289830}
 def check_if_authorized(card):# function returns true if authorized user otherwise false
     try:
         Users = { "Users": [ card ] }
