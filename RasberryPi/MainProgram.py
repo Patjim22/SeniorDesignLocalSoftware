@@ -156,9 +156,9 @@ class Read_Card_Tread (threading.Thread): #reads the card
                         print()
                      else:
                         print(len(line))
-                        if(len(line)==10):
-                            card = line[0:9]
-                            print(line[0:9])
+                        if(len(line)==9):
+                            card = line[0:8]
+                            print(line[0:8])
                      line = ''
             #time.sleep(4)
             
