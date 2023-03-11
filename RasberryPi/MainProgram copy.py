@@ -357,7 +357,7 @@ start.grid(row=1,columnspan=2)
 
    
     
-configurePi()
+#configurePi()
 
 disableDevice()
 
