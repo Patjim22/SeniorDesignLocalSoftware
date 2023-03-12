@@ -54,7 +54,7 @@ win.title("Access Control")#window name
 win.geometry('800x480')#size of window
 win.configure(bg='white')
 countDownText = "count"
-countDown = Label(win,text= countDownText ,anchor=W,font= myFont, fg="white", bg="red") #create label for countdown
+countDown = Label(win,text= countDownText ,anchor=E,font= myFont, fg="white", bg="red") #create label for countdown
 countDown.grid(row=0,column=1)
 
 #Title Label
