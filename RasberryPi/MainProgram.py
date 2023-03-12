@@ -220,7 +220,7 @@ def enableDevice(): #enables the usb and Control OPTO issolators and starts the 
     print("ACTIVATED")
     GPIO.output(DEVICEENABLED,True)                	# Device enable light
     endTime = time.time()+countDownIncrementer
-    SessionStarted()                            
+    #SessionStarted()                            
 
 def disableDevice():
     global user_1_state , user_2_state,user_2_ID, user_1_ID, endTime, userName
@@ -238,6 +238,7 @@ def disableDevice():
     user_2_ID =0
     userName =""
     endTime=0
+    #SessionEnded()
 
 def pauseDevice():#disables optoControl
     GPIO.output(CONTROLOPTO,False)             # Opto
@@ -285,11 +286,11 @@ def assignUserToMachine(card):
                 enableDevice()
             else:
                 print("A buddy is required")        #needs to write to a label on the gui
-                buddy.grid(row=3,column=0)
+                #buddy.grid(row=3,column=0)
                 buddySwipeReuiredBy=time.time()+twoSwipeTime     
     else:
         print("non-authorized user")
-        not_authorized.grid(row=1,column=0)
+        #not_authorized.grid(row=1,column=0)
         
 
 def noBuddySwipe():#send to database that id 1 didn't have a buddy
