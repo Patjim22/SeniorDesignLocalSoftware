@@ -54,11 +54,8 @@ win.title("Access Control")#window name
 win.geometry('800x480')#size of window
 win.configure(bg='white')
 countDownText = "count"
-countDown = Label(win,text= countDownText ,anchor=CENTER,font= myFont, bg='white') #create label for countdown
-#countDown.pack()
-#countDown.grid(row=2,column=0, sticky="nsew")#puts the countdown to the center of the screen
-exitButton  = Button(win, text = "Exit", font = myFont, command = exitProgram, height =2 , width = 6) 
-#exitButton.pack(side = BOTTOM)
+countDown = Label(win,text= countDownText ,anchor=W,font= myFont, fg="white", bg="red") #create label for countdown
+countDown.grid(row=0,column=1)
 
 #Title Label
 top= Label(text="ECE Makerspace",anchor=E,font=myFont, fg="white", bg="red")
@@ -74,9 +71,9 @@ button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg='
 
 #Buddy Label
 buddy=Label(text="Buddy Required, Swipe Another ID", anchor=CENTER, font=myFont, fg='purple', bg='white')
-five=Label(text="AFTER 5PM", anchor=CENTER, font=myFont, bg='white', fg='red')
-#buddy.grid(row=3,column=0)
-#five.grid(row=2,column=0)
+five=Label(text="AFTER 5PM Buddy Required", anchor=CENTER, font=myFont, bg='white', fg='red')
+buddy.grid(row=3,column=0)
+five.grid(row=2,column=0)
 
 #Reswipe Label
 reswipe=Label(text="Reswipe To Continue Session", anchor=CENTER, font=myFont, bg='white', fg='orange')
@@ -118,6 +115,10 @@ while True:
 	if time.time() <= endTime:
 		countdown()
 	else: countDown.config(text= time.strftime("%I:%M:%S"))
+	time.sleep(10)
+	buddy.grid_forget()
+	five.grid_forget()
+	win.update()
 
 
 
