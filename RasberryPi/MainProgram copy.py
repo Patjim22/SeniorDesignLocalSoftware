@@ -163,7 +163,7 @@ class Read_Card_Tread (threading.Thread): #reads the card
                             print(card)
                         print()
                      else:
-                        print(len(line))
+                        #print(len(line))
                         if(len(line)==9):
                             card = line[0:9]
                             print(line[0:9])
@@ -220,6 +220,7 @@ def enableDevice(): #enables the usb and Control OPTO issolators and starts the 
     print("ACTIVATED")
     GPIO.output(DEVICEENABLED,True)                	# Device enable light
     endTime = time.time()+countDownIncrementer
+    SessionStarted()                            
 
 def disableDevice():
     global user_1_state , user_2_state,user_2_ID, user_1_ID, endTime, userName
@@ -284,16 +285,31 @@ def assignUserToMachine(card):
                 enableDevice()
             else:
                 print("A buddy is required")        #needs to write to a label on the gui
+                buddy.grid(row=3,column=0)
                 buddySwipeReuiredBy=time.time()+twoSwipeTime     
     else:
         print("non-authorized user")
+        not_authorized.grid(row=1,column=0)
         
 
 def noBuddySwipe():#send to database that id 1 didn't have a buddy
     global user_1_state, user_1_ID
+    buddy.grid_forget()
     GPIO.output(USER1LED,False)
     user_1_state= 0
     user_1_ID= 0
+
+def SessionStarted():#enables user welcome message and disables start message
+    welcome.grid(row=1,columnspan=2)
+    start.grid_forget()
+    buddy.grid_forget()
+    button.grid(row=3,column=0)
+    
+def SessionEnded():#enables user welcome message and disables start message
+    welcome.grid_forget()
+    start.grid(row=1,columnspan=2)
+    button.grid_forget()
+    
 
 setupGPIO()    
 T1 = True
@@ -314,16 +330,16 @@ win.title("Access Control")#window name
 win.geometry('800x480')#size of window
 win.configure(bg='white')
 countDownText = "count"
-countDown = Label(win,text= countDownText ,anchor=CENTER,font= myFont, bg='white') #create label for countdown
-
+countDown = Label(win,text= countDownText ,anchor=W,font= myFont, fg="white", bg="red") #create label for countdown
+countDown.grid(row=0,column=0)
 
 #Title Label
 top= Label(text="ECE Makerspace",anchor=E,font=myFont, fg="white", bg="red")
 top.grid(row=0,column=0)
 
 #User Name Label
-#welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, bg='white')
-#welcome.grid(row=1,column=0)
+welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, fg='blue')
+#welcome.grid(row=1,columnspan=2)
 
 #End Session Label
 button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg='white', fg='blue')
@@ -331,7 +347,7 @@ button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg='
 
 #Buddy Label
 buddy=Label(text="Buddy Required, Swipe Another ID", anchor=CENTER, font=myFont, fg='purple', bg='white')
-five=Label(text="AFTER 5PM", anchor=CENTER, font=myFont, bg='white', fg='red')
+five=Label(text="AFTER 5PM Buddy Required", anchor=CENTER, font=myFont, bg='white', fg='red')
 #buddy.grid(row=3,column=0)
 #five.grid(row=2,column=0)
 
@@ -344,9 +360,6 @@ authorized=Label(text="AUTHORIZED", anchor=CENTER, font=myFont, bg='white', fg='
 not_authorized= Label(text="NOT AUTHORIZED", anchor=CENTER, font=myFont, bg='white', fg='red')
 #not_authorized.grid(row=1,column=0)
 
-#User Name Label
-welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, bg='white')
-#welcome.grid(row=1,column=0)
 
 #Start Label
 start=Label(text="Swipe Card To Begin Session", anchor=CENTER, bg='white', font=myFont, fg='blue')
