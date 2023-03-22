@@ -261,12 +261,25 @@ def check_if_authorized(card):
 def assignUserToMachine(card):
     global user_1_state , user_2_state, user_1_ID, user_2_ID, buddySwipeReuiredBy
     authorized = check_if_authorized(card)
-    if(card in BackUp_USER):
+    if(card in BackUp_USER):    #checks if card is a backup user in the system and then activates machine
         user_1_state =1
         user_2_state=1
         user_1_ID = card
         GPIO.output(USER1LED,True)
         GPIO.output(USER2LED,True)
+    if(endTime != 0):
+            if(user_1_ID ==card):
+                user_1_state =1
+            elif(user_2_ID ==card):
+                user_2_state=1
+            elif(authorized =="admin"):             #admin user state
+                user_1_ID = card
+                user_1_state =1
+                user_2_ID =card
+                user_2_state =1
+            else:
+                authorized = False
+                print("Another user is currently using the machine")
     if(authorized):
         if(user_1_state==0):
             user_1_state=1
@@ -312,9 +325,7 @@ def SessionEnded():#enables user welcome message and disables start message
     button.grid_forget()
     
 
-setupGPIO()    
-T1 = True
-T2 = True
+setupGPIO()
 
 win = Tk()
 
@@ -331,7 +342,7 @@ win.title("Access Control")#window name
 win.geometry('800x480')#size of window
 win.configure(bg='white')
 countDownText = "count"
-countDown = Label(win,text= countDownText ,anchor=W,font= myFont, fg="white", bg="red") #create label for countdown
+countDown = Label(win,text= countDownText ,anchor=E,font= myFont, fg="white", bg="red") #create label for countdown
 countDown.grid(row=0,column=1)
 
 #Title Label
@@ -381,7 +392,7 @@ th2 = Read_Card_Tread("T2",2000)
 th1.start()
 th2.start()
 
-while T1:
+while True:
     if(endTime!=0):
         countdown()
     else:
@@ -399,7 +410,9 @@ while T1:
     
     if(GPIO.input(BUTTON2)==GPIO.LOW):
         print("Button 2")
-        disableDevice()
+        time.sleep(.5)
+        if(GPIO.input(BUTTON2)==GPIO.LOW):
+            disableDevice()
     if(userName != ""):
         welcome.config(text="Welcome: "+ userName)
     else:

@@ -71,9 +71,9 @@ class ID_Check_Thread (threading.Thread):
                 print("Reading user card")
                 if(endTime==0):                         #if endtime ==0 then no one is currently using the machine
                     assignUserToMachine(card)
-                else:
-                    if((user_1_ID ==card) or (user_2_ID ==card)):
-                        assignUserToMachine(card)
+                # else:
+                #     if((user_1_ID ==card) or (user_2_ID ==card)):
+                #         assignUserToMachine(card)
                 card ="0"
                 
                 
@@ -261,12 +261,25 @@ def pauseDevice():#disables optoControl
 def assignUserToMachine(card):
     global user_1_state , user_2_state, user_1_ID, user_2_ID, buddySwipeReuiredBy
     authorized = check_if_authorized(card)
-    if(card in BackUp_USER):
+    if(card in BackUp_USER):    #checks if card is a backup user in the system and then activates machine
         user_1_state =1
         user_2_state=1
         user_1_ID = card
         GPIO.output(USER1LED,True)
         GPIO.output(USER2LED,True)
+    if(endTime != 0):           #if machine is running check to see if it is the user currently swiped in
+            if(user_1_ID ==card):
+                user_1_state =1
+            elif(user_2_ID ==card):
+                user_2_state=1
+            elif(authorized =="admin"):             #admin user state
+                user_1_ID = card
+                user_1_state =1
+                user_2_ID =card
+                user_2_state =1
+            else:
+                authorized = False
+                print("Another user is currently using the machine")
     if(authorized):
         if(user_1_state==0):
             user_1_state=1
@@ -379,7 +392,7 @@ th2 = Read_Card_Tread("T2",2000)
 th1.start()
 th2.start()
 
-while T1:
+while True:
     if(endTime!=0):
         countdown()
     else:
