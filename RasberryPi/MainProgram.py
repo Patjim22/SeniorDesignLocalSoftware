@@ -377,11 +377,6 @@ not_authorized= Label(text="NOT AUTHORIZED", anchor=CENTER, font=myFont, bg='whi
 start=Label(text="Swipe Card To Begin Session", anchor=CENTER, bg='white', font=myFont, fg='blue')
 start.grid(row=1,columnspan=2)
 
-
-
-
-   
-    
 configurePi()
 
 disableDevice()
