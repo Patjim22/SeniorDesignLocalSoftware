@@ -261,12 +261,25 @@ def check_if_authorized(card):
 def assignUserToMachine(card):
     global user_1_state , user_2_state, user_1_ID, user_2_ID, buddySwipeReuiredBy
     authorized = check_if_authorized(card)
-    if(card in BackUp_USER):
+    if(card in BackUp_USER):    #checks if card is a backup user in the system and then activates machine
         user_1_state =1
         user_2_state=1
         user_1_ID = card
         #GPIO.output(USER1LED,True)
         #GPIO.output(USER2LED,True)
+    if(endTime != 0):
+            if(user_1_ID ==card):
+                user_1_state =1
+            elif(user_2_ID ==card):
+                user_2_state=1
+            elif(authorized =="admin"):             #admin user state
+                user_1_ID = card
+                user_1_state =1
+                user_2_ID =card
+                user_2_state =1
+            else:
+                authorized = False
+                print("Another user is currently using the machine")
     if(authorized):
         if(user_1_state==0):
             user_1_state=1
