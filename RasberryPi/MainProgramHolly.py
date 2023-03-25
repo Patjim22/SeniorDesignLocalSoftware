@@ -46,8 +46,8 @@ USER2LED=33
 DEVICEENABLED =35                                     #4 and 3  RED LEDS
 REDLED2 =37
 CONTROLOPTO =11                                 #2 control opto
-USBSEL =8                                      #14 usb sel
-USBENABLE = 10                                  #when high disables usb ports
+USBSEL =8                                      #14 usb sel changes which usb port on pcb is being used 1 is port 2 which is the port the device is plugged in to and 0 is the other port that is not in use
+USBENABLE = 10                                  #when high disables usb ports on pcb
 BUZZER = 12
 BUTTON1 = 29                                    #reset device 
 BUTTON2 = 31                                    #top panel button
@@ -68,12 +68,11 @@ class ID_Check_Thread (threading.Thread):
         global card
         while True:
             if(card!='0'):
-                print("Reading user card")
-                if(endTime==0):                         #if endtime ==0 then no one is currently using the machine
-                    assignUserToMachine(card)
-                else:
-                    if((user_1_ID ==card) or (user_2_ID ==card)):
-                        assignUserToMachine(card)
+                print("checking ID")
+                assignUserToMachine(card)
+                # else:
+                #     if((user_1_ID ==card) or (user_2_ID ==card)):
+                #         assignUserToMachine(card)
                 card ="0"
                 
                 
@@ -168,7 +167,7 @@ class Read_Card_Tread (threading.Thread): #reads the card
 #                             card = line[0:9]
 #                             print(line[0:9])
 #                      line = ''
-#             #time.sleep(4)
+#             
             
 def setupGPIO():
     # GPIO.setmode(GPIO.BOARD)                                   #Use Board pin numbers
@@ -376,12 +375,7 @@ not_authorized= Label(text="NOT AUTHORIZED", anchor=CENTER, font=myFont, bg='whi
 #Start Label
 start=Label(text="Swipe Card To Begin Session", anchor=CENTER, bg='white', font=myFont, fg='blue')
 start.grid(row=1,columnspan=2)
-
-
-
-
-   
-    
+ 
 #configurePi()
 
 disableDevice()

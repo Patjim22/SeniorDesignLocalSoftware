@@ -46,8 +46,8 @@ USER2LED=33
 DEVICEENABLED =35                                     #4 and 3  RED LEDS
 REDLED2 =37
 CONTROLOPTO =11                                 #2 control opto
-USBSEL =8                                      #14 usb sel
-USBENABLE = 10                                  #when high disables usb ports
+USBSEL =8                                      #14 usb sel changes which usb port on pcb is being used 1 is port 2 which is the port the device is plugged in to and 0 is the other port that is not in use
+USBENABLE = 10                                  #when high disables usb ports on pcb
 BUZZER = 12
 BUTTON1 = 29                                    #reset device 
 BUTTON2 = 31                                    #top panel button
@@ -68,9 +68,8 @@ class ID_Check_Thread (threading.Thread):
         global card
         while True:
             if(card!='0'):
-                print("Reading user card")
-                if(endTime==0):                         #if endtime ==0 then no one is currently using the machine
-                    assignUserToMachine(card)
+                print("checking ID")
+                assignUserToMachine(card)
                 # else:
                 #     if((user_1_ID ==card) or (user_2_ID ==card)):
                 #         assignUserToMachine(card)
@@ -127,7 +126,7 @@ class Read_Card_Tread (threading.Thread): #reads the card
         line = '' 
         caps = False 
 
-        dev =evdev.InputDevice('/dev/input/event0')
+        dev =evdev.InputDevice('/dev/input/event0') #selects the first device plugged into the pi
         dev.grab()
 
         for event in dev.read_loop():
@@ -168,7 +167,7 @@ class Read_Card_Tread (threading.Thread): #reads the card
                             card = line[0:9]
                             print(line[0:9])
                      line = ''
-            #time.sleep(4)
+            
             
 def setupGPIO():
     GPIO.setmode(GPIO.BOARD)                                   #Use Board pin numbers
@@ -268,15 +267,15 @@ def assignUserToMachine(card):
         GPIO.output(USER1LED,True)
         GPIO.output(USER2LED,True)
     if(endTime != 0):           #if machine is running check to see if it is the user currently swiped in
-            if(user_1_ID ==card or user_2_ID == card):
+            if(user_1_ID ==card or user_2_ID == card):  #if the card is user1 or user 2's replace user 1 with that card
                 user_1_state =1
-                user_1_ID =1
+                user_1_ID =card     #sets user1 ID to be card number
                 user_2_state=0
-                user_2_ID =0
+                user_2_ID =""
             elif(check_if_admin(card)):             #admin user state
-                user_1_ID = card
-                user_1_state =1
-                user_2_ID =card
+                user_1_ID = card    #admin card number replaces user1
+                user_1_state =1     
+                user_2_ID =card     #admin card number replaces user2
                 user_2_state =1
             else:
                 authorized = False
