@@ -268,11 +268,12 @@ def assignUserToMachine(card):
         GPIO.output(USER1LED,True)
         GPIO.output(USER2LED,True)
     if(endTime != 0):           #if machine is running check to see if it is the user currently swiped in
-            if(user_1_ID ==card):
+            if(user_1_ID ==card or user_2_ID == card):
                 user_1_state =1
-            elif(user_2_ID ==card):
-                user_2_state=1
-            elif(authorized =="admin"):             #admin user state
+                user_1_ID =1
+                user_2_state=0
+                user_2_ID =0
+            elif(check_if_admin(card)):             #admin user state
                 user_1_ID = card
                 user_1_state =1
                 user_2_ID =card

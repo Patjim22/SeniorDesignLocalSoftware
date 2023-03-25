@@ -24,3 +24,6 @@ def check_if_authorized(card):# function returns true if authorized user otherwi
     except Exception as e:
         print(repr(e))
         return False
+
+def check_if_admin(card): #function returns true if admin
+    print("admin")
