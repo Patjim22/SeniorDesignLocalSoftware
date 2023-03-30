@@ -63,6 +63,8 @@ exitButton  = Button(win, text = "Exit", font = myFont, command = exitProgram, h
 #Title Label
 top= Label(text="ECE Makerspace",anchor=E,font=myFont, fg="white", bg="red")
 top.grid(row=0,column=0)
+clock= Label(win, text="clock", anchor=CENTER, fg='white', font=myFont, bg='red')
+clock.grid(row=0,column=1)
 
 #User Name Label
 #welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, bg='white')
@@ -100,15 +102,6 @@ start.grid(row=1,columnspan=2)
 
 win.update()
 
-def steptwo():
-	welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, bg='white')		
-	welcome.grid(row=1,column=0)
-	#countDown = Label(win,text= countDownText ,anchor=CENTER,font= myFont, bg='white')
-	countDown.grid(row=2,column=0, sticky="nsew")
-	button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg='white', fg='blue')
-	button.grid(row=3,column=0)
-	newstart= False
-
 endTime = time.time()+countDownIncrementer
 
 #main
@@ -117,7 +110,7 @@ while True:
 		
 	if time.time() <= endTime:
 		countdown()
-	else: countDown.config(text= time.strftime("%I:%M:%S"))
+	clock.config(text= time.strftime("%I:%M:%S"))
 
 
 
