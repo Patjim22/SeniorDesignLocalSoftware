@@ -25,6 +25,7 @@ global user_1_state, user_2_state
 twoSwipeTime = 20        #used to hold how long to wait for a buddy to swipe
 buddySwipeReuiredBy=0   #holds the time to cancel out and say you were rejected because no buddy
 userName =""
+auth_sel= 0
 countDownMinutes=1
 countDownIncrementer = countDownMinutes*60 #number of minutes wanted goes where the 1 is
 endOfWorkingHours=17	#5pm
@@ -280,6 +281,7 @@ def assignUserToMachine(card):
                 authorized = False
                 print("Another user is currently using the machine")
     if(authorized):
+        auth_sel=1
         if(user_1_state==0):
             user_1_state=1
             user_1_ID= card
@@ -302,8 +304,7 @@ def assignUserToMachine(card):
                 buddySwipeReuiredBy=time.time()+twoSwipeTime     
     else:
         print("non-authorized user")
-        #not_authorized.grid(row=1,column=0)
-        
+        auth_sel=2
 
 def noBuddySwipe():#send to database that id 1 didn't have a buddy
     global user_1_state, user_1_ID
@@ -336,25 +337,28 @@ Grid.rowconfigure(win,2,weight=1)
 Grid.rowconfigure(win,3,weight=1)
 Grid.columnconfigure(win,0,weight=1)
 Grid.columnconfigure(win,1,weight=1)
- 
+
 win.title("Access Control")#window name
 win.geometry('800x480')#size of window
-win.configure(bg='white')
-countDownText = "count"
-countDown = Label(win,text= countDownText ,anchor=E,font= myFont, fg="white", bg="red") #create label for countdown
-countDown.grid(row=0,column=1)
+#countDownText = "count"
+countDown = Label(win ,anchor=CENTER,font= myFont, bg="white") #create label for countdown
+#countDown.pack()
+countDown.grid(row=2,columnspan=2, sticky="nsew")#puts the countdown to the center of the screen
+
 
 #Title Label
-top= Label(text="ECE Makerspace",anchor=E,font=myFont, fg="white", bg="red")
+top= Label(text="ECE Makerspace",anchor=W,font=myFont, fg="white", bg="red")
 top.grid(row=0,column=0)
+clock= Label(text="clock", font=myFont, anchor=E, fg='white', bg='red')
+clock.grid(row=0,column=1)
 
 #User Name Label
-welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, fg='blue')
-#welcome.grid(row=1,columnspan=2)
+welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, bg="white")
+welcome.grid(row=1,columnspan=2)
 
 #End Session Label
-button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg='white', fg='blue')
-#button.grid(row=3,column=0)
+button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg="white")
+button.grid(row=3,columnspan=2)
 
 #Buddy Label
 buddy=Label(text="Buddy Required, Swipe Another ID", anchor=CENTER, font=myFont, fg='purple', bg='white')
@@ -389,8 +393,9 @@ th2.start()
 while True:
     if(endTime!=0):
         countdown()
-    else:
-        countDown.config(text= time.strftime("%I:%M:%S")) #displays time in 12 hour format
+    #else:
+        
+    clock.config(text= time.strftime("%I:%M:%S")) #displays time in 12 hour format
     
     if(buddySwipeReuiredBy!=0):
         currentTime =buddySwipeReuiredBy-time.time() 
@@ -408,10 +413,24 @@ while True:
         if(GPIO.input(BUTTON2)==GPIO.LOW):
             disableDevice()
     if(userName != ""):
-        welcome.config(text="Welcome: "+ userName)
+        welcome.config(text="Welcome "+ userName)
     else:
-        welcome.config(text="Welcome USER!")
-        #print("Welcome USER!")
+        welcome.config(text="Swipe Card To Begin Session")
+    
+    if(auth_sel==0):
+        label_time=3
+    #elif(auth_sel ==1):
+        #welcome.config(text="AUTHORIZED", fg='green')
+        #label_time=label_time-1
+        #if(label_time==0):
+            #auth_sel=0
+    #elif(auth_sel==2):
+        #welcome.config(text="NOT AUTHORIZED", fg='red')
+        #label_time=label_time-1
+        #if(label_time==0):
+            #auth_sel=0
+
+
     win.update()
     time.sleep(.5)  #sleeps for 1/2 a second 
 

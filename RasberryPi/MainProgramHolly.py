@@ -34,6 +34,10 @@ user_1_state =0
 user_2_state = 0
 user_1_ID = 0
 user_2_ID = 0
+global gui_state
+gui_state=0
+global gui_flag
+gui_flag=0
 
 
 
@@ -258,7 +262,7 @@ def check_if_authorized(card):
     return False	# function returns true if authorized user otherwise false
 
 def assignUserToMachine(card):
-    global user_1_state , user_2_state, user_1_ID, user_2_ID, buddySwipeReuiredBy
+    global user_1_state , user_2_state, user_1_ID, user_2_ID, buddySwipeReuiredBy, gui_state
     authorized = check_if_authorized(card)
     if(card in BackUp_USER):    #checks if card is a backup user in the system and then activates machine
         user_1_state =1
@@ -292,17 +296,20 @@ def assignUserToMachine(card):
                 #GPIO.output(USER2LED,True)
         if(time.localtime().tm_hour<endOfWorkingHours and time.localtime().tm_hour >=beginningOfWorkHours):#during working houres only 1 user is needed
             if(user_1_state or user_2_state):
+                gui_state=1
                 enableDevice()     
         else:#outside of normal hours a buddy is required
             if(user_1_state and user_2_state):
                 enableDevice()
+                gui_state=1
             else:
                 print("A buddy is required")        #needs to write to a label on the gui
-                #buddy.grid(row=3,column=0)
+                gui_state=1
                 buddySwipeReuiredBy=time.time()+twoSwipeTime     
     else:
         print("non-authorized user")
-        #not_authorized.grid(row=1,column=0)
+        gui_state=2
+        
         
 
 def noBuddySwipe():#send to database that id 1 didn't have a buddy
@@ -341,16 +348,20 @@ win.title("Access Control")#window name
 win.geometry('800x480')#size of window
 win.configure(bg='white')
 countDownText = "count"
-countDown = Label(win,text= countDownText ,anchor=E,font= myFont, fg="white", bg="red") #create label for countdown
-countDown.grid(row=0,column=1)
+countDown = Label(win,anchor=E,font= myFont, bg="white") #create label for countdown
+countDown.grid(row=2,column=0, sticky="nsew")
+timeLabel = Label(text=" ", fg='black', font=('Helvetica',25,'bold'), bg='white', anchor=W)
+timeLabel.grid(row=2,column=1)
 
 #Title Label
-top= Label(text="ECE Makerspace",anchor=E,font=myFont, fg="white", bg="red")
+top= Label(text="ECE Makerspace",anchor=W,font=myFont, fg="white", bg="red")
 top.grid(row=0,column=0)
+clock= Label(text="clock", font=myFont, anchor=E, fg='white', bg='red')
+clock.grid(row=0,column=1)
 
 #User Name Label
-welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, fg='blue')
-#welcome.grid(row=1,columnspan=2)
+welcome= Label(text=" ", anchor=CENTER, font=myFont, fg='blue', bg='white')
+welcome.grid(row=1,columnspan=2)
 
 #End Session Label
 button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg='white', fg='blue')
@@ -389,29 +400,83 @@ th2.start()
 while True:
     if(endTime!=0):
         countdown()
-    else:
-        countDown.config(text= time.strftime("%I:%M:%S")) #displays time in 12 hour format
+    #else:
+     #   countDown.config(text= time.strftime("%I:%M:%S")) #displays time in 12 hour format
     
-    if(buddySwipeReuiredBy!=0):
-        currentTime =buddySwipeReuiredBy-time.time() 
-        if(currentTime >0):
+    clock.config(text= time.strftime("%I:%M:%S"))
+    
+    
+    #if(buddySwipeReuiredBy!=0):
+     #   currentTime =buddySwipeReuiredBy-time.time() 
+      #  if(currentTime >0):
             #print you have blank time to swipe
-            print("Time for Buddy Swipe: "+str(int(currentTime/60)) +":" +str(int(currentTime%60)))
-            countDown.config(text="Time for Buddy Swipe: "+str(int(currentTime/60)) +":" +str(int(currentTime%60)))
-        else:
-            buddySwipeReuiredBy=0
-            noBuddySwipe()
+       #     print("Time for Buddy Swipe: "+str(int(currentTime/60)) +":" +str(int(currentTime%60)))
+        #    countDown.config(text="Buddy Required, Swipe Another ID: "+str(int(currentTime/60)) +":" +str(int(currentTime%60)))
+        #else:
+         #   buddySwipeReuiredBy=0
+          #  noBuddySwipe()
     
     # if(GPIO.input(BUTTON2)==GPIO.LOW):
     #     print("Button 2")
     #     time.sleep(.5)
     #     if(GPIO.input(BUTTON2)==GPIO.LOW):
     #         disableDevice()
-    if(userName != ""):
-        welcome.config(text="Welcome: "+ userName)
-    else:
-        welcome.config(text="Welcome USER!")
+    #if(userName != ""):
+    #    welcome.config(text="Welcome: "+ userName)
+    #else:
+    #    welcome.config(text="Welcome USER!")
         #print("Welcome USER!")
+
+    if(gui_state==0):
+        welcome.config(text="Swipe Card To Begin Session", fg='blue')
+        if(time.time()>1700):
+            button.config(text="After 5 PM, Buddy Swipe Required")
+    elif(gui_state==1):  
+        button.config(text=" ")
+        if(gui_flag==0):
+            gui_count=time.time()+1
+            gui_flag=1
+            welcome.config(text="AUTHORIZED", fg='green')
+        else:
+            if(time.time()>=gui_count):
+                gui_flag=0
+                gui_count=0
+                if(buddySwipeReuiredBy!=0):
+                    gui_state=4
+                else:
+                    gui_state=3
+    elif(gui_state==2):
+        button.config(text=" ")
+        welcome.config(text="NOT AUTHORIZED", fg='red')
+        if(gui_flag==0):
+            gui_count=time.time()+1
+            gui_flag=1
+        else:
+            if(time.time()>=gui_count):
+                gui_state=0
+                gui_flag=0
+                gui_count=0
+    elif(gui_state==3):
+        timeLabel.config(text="Minutes Remaining")
+        if(userName != ""):
+            welcome.config(text="Welcome: "+ userName, fg='blue')
+        else:
+            welcome.config(text="Welcome USER!", fg='blue')
+
+        if((endTime-time.time())<=40):
+            button.config(text="Reswipe To Continue Session", fg='red')
+        else:
+            button.config(text="Hold Button To End Session", fg='purple')
+    elif(gui_state==4):
+        currentTime =buddySwipeReuiredBy-time.time() 
+        if(currentTime >0):
+            #print you have blank time to swipe
+            print("Time for Buddy Swipe: "+str(int(currentTime/60)) +":" +str(int(currentTime%60)))
+            welcome.config(text="Buddy Required, Swipe Another ID: "+str(int(currentTime/60)) +":" +str(int(currentTime%60)), fg='blue')
+        else:
+            buddySwipeReuiredBy=0
+            noBuddySwipe()
+
     win.update()
     time.sleep(.5)  #sleeps for 1/2 a second 
 

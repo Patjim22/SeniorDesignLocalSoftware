@@ -13,8 +13,3 @@ This program Requires a display environment to function
   * re
 Requires Python's hook with mariadb (pip install mariadb)
 
-# Image Build Tool (build.bash)
-
-* Run `build.bash` to create an image, tagged with the build date.
-	* Requires root access
-	* No arguments needed, the image name is 
