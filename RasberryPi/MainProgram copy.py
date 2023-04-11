@@ -74,12 +74,7 @@ class ID_Check_Thread (threading.Thread):
             if(card!='0'):
                 print("checking ID")
                 assignUserToMachine(card)
-                # else:
-                #     if((user_1_ID ==card) or (user_2_ID ==card)):
-                #         assignUserToMachine(card)
                 card ="0"
-                
-                
             time.sleep(2)   #sleep 2 seconds
 
 class Read_Card_Tread (threading.Thread): #reads the card
@@ -170,9 +165,7 @@ class Read_Card_Tread (threading.Thread): #reads the card
                         if(len(line)==9):
                             card = line[0:9]
                             print(line[0:9])
-                     line = ''
-            #time.sleep(4)
-            
+                     line = ''    
 def setupGPIO():
     GPIO.setmode(GPIO.BOARD)                                   #Use Board pin numbers
     GPIO.setwarnings(False)                                    # Suppresses warning messages from output.
@@ -200,8 +193,6 @@ def countdown(): #does the countdown when it is required
         GPIO.output(BUZZER, False)
         disableDevice()
 	
-
-
 def enableDevice(): #enables the usb and Control OPTO issolators and starts the countdown
     global endTime
     GPIO.output(CONTROLOPTO,True)              # Opto
@@ -259,15 +250,17 @@ def assignUserToMachine(card):
         user_1_ID = card
         GPIO.output(USER1LED,True)
         GPIO.output(USER2LED,True)
-    if(endTime != 0):
-            if(user_1_ID ==card):
+        enableDevice()
+    if(endTime != 0):           #if machine is running check to see if it is the user currently swiped in
+            if(user_1_ID ==card or user_2_ID == card):  #if the card is user1 or user 2's replace user 1 with that card
                 user_1_state =1
-            elif(user_2_ID ==card):
-                user_2_state=1
+                user_1_ID =card     #sets user1 ID to be card number
+                user_2_state=0
+                user_2_ID =""
             elif(check_if_admin(card)):             #admin user state
-                user_1_ID = card
-                user_1_state =1
-                user_2_ID =card
+                user_1_ID = card    #admin card number replaces user1
+                user_1_state =1     
+                user_2_ID =card     #admin card number replaces user2
                 user_2_state =1
             else:
                 authorized = False
