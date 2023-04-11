@@ -275,7 +275,7 @@ def assignUserToMachine(card):
                 user_1_state =1
             elif(user_2_ID ==card):
                 user_2_state=1
-            elif(authorized =="admin"):             #admin user state
+            elif(check_if_admin(card)):             #admin user state
                 user_1_ID = card
                 user_1_state =1
                 user_2_ID =card
