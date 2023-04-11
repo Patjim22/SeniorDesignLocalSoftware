@@ -288,9 +288,10 @@ def assignUserToMachine(card):
         else:#outside of normal hours a buddy is required
             if(user_1_state and user_2_state):
                 enableDevice()
+                gui_state=1
             else:
                 print("A buddy is required")        #needs to write to a label on the gui
-                #buddy.grid(row=3,column=0)
+                gui_state=1
                 buddySwipeReuiredBy=time.time()+twoSwipeTime     
     else:
         print("non-authorized user")
@@ -342,7 +343,7 @@ timeLabel.grid(row=2,column=1)
 #Title Label
 top= Label(text="ECE Makerspace",anchor=W,font=myFont, fg="white", bg="red")
 top.grid(row=0,column=0)
-clock= Label(text="clock", font=myFont, anchor=E, fg='white', bg='red')
+clock= Label(text=" ", font=myFont, anchor=E, fg='white', bg='red')
 clock.grid(row=0,column=1)
 
 #User Name Label
@@ -350,27 +351,12 @@ welcome= Label(text=" ", anchor=CENTER, font=myFont, fg='blue', bg='white')
 welcome.grid(row=1,columnspan=2)
 
 #End Session Label
-button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg='white', fg='blue')
-#button.grid(row=3,column=0)
-
-#Buddy Label
-buddy=Label(text="Buddy Required, Swipe Another ID", anchor=CENTER, font=myFont, fg='purple', bg='white')
-five=Label(text="AFTER 5PM Buddy Required", anchor=CENTER, font=myFont, bg='white', fg='red')
-#buddy.grid(row=3,column=0)
-#five.grid(row=2,column=0)
-
-#Reswipe Label
-reswipe=Label(text="Reswipe To Continue Session", anchor=CENTER, font=myFont, bg='white', fg='orange')
-#reswipe.grid(row=3,column=0)
-
-#Authorized Label
-authorized=Label(text="AUTHORIZED", anchor=CENTER, font=myFont, bg='white', fg='green')
-not_authorized= Label(text="NOT AUTHORIZED", anchor=CENTER, font=myFont, bg='white', fg='red')
-#not_authorized.grid(row=1,column=0)
+button=Label(text=" ", anchor=CENTER, font=myFont, bg='white', fg='blue')
+button.grid(row=3,columnspan=2)
 
 
 #Start Label
-start=Label(text="Swipe Card To Begin Session", anchor=CENTER, bg='white', font=myFont, fg='blue')
+start=Label(text=" ", anchor=CENTER, bg='white', font=myFont, fg='blue')
 start.grid(row=1,columnspan=2)
  
 #configurePi()
