@@ -218,7 +218,7 @@ def disableDevice():
     GPIO.output(CONTROLOPTO,False)             # Opto
     GPIO.output(USBSEL,False)                	# USB
     GPIO.output(USBENABLE, True)
-    GPIO.ouput(EXTERNALRELAY, False)
+    GPIO.output(EXTERNALRELAY, False)
     GPIO.output(USER2LED,False)               	# User 2 led
     GPIO.output(USER1LED,False)                # User1 led
     print("DISABLED")
