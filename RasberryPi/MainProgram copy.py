@@ -25,7 +25,6 @@ global user_1_state, user_2_state
 twoSwipeTime = 20        #used to hold how long to wait for a buddy to swipe
 buddySwipeReuiredBy=0   #holds the time to cancel out and say you were rejected because no buddy
 userName =""
-auth_sel= 0
 countDownMinutes=1
 countDownIncrementer = countDownMinutes*60 #number of minutes wanted goes where the 1 is
 endOfWorkingHours=17	#5pm
@@ -47,8 +46,8 @@ USER2LED=33
 DEVICEENABLED =35                                     #4 and 3  RED LEDS
 REDLED2 =37
 CONTROLOPTO =11                                 #2 control opto
-USBSEL =8                                      #14 usb sel changes which usb port on pcb is being used 1 is port 2 which is the port the device is plugged in to and 0 is the other port that is not in use
-USBENABLE = 10                                  #when high disables usb ports on pcb
+USBSEL =8                                      #14 usb sel
+USBENABLE = 10                                  #when high disables usb ports
 BUZZER = 12
 BUTTON1 = 29                                    #reset device 
 BUTTON2 = 31                                    #top panel button
@@ -69,11 +68,12 @@ class ID_Check_Thread (threading.Thread):
         global card
         while True:
             if(card!='0'):
-                print("checking ID")
-                assignUserToMachine(card)
-                # else:
-                #     if((user_1_ID ==card) or (user_2_ID ==card)):
-                #         assignUserToMachine(card)
+                print("Reading user card")
+                if(endTime==0):                         #if endtime ==0 then no one is currently using the machine
+                    assignUserToMachine(card)
+                else:
+                    if((user_1_ID ==card) or (user_2_ID ==card)):
+                        assignUserToMachine(card)
                 card ="0"
                 
                 
@@ -127,7 +127,7 @@ class Read_Card_Tread (threading.Thread): #reads the card
         line = '' 
         caps = False 
 
-        dev =evdev.InputDevice('/dev/input/event0') #selects the first device plugged into the pi
+        dev =evdev.InputDevice('/dev/input/event0')
         dev.grab()
 
         for event in dev.read_loop():
@@ -168,7 +168,7 @@ class Read_Card_Tread (threading.Thread): #reads the card
                             card = line[0:9]
                             print(line[0:9])
                      line = ''
-            
+            #time.sleep(4)
             
 def setupGPIO():
     GPIO.setmode(GPIO.BOARD)                                   #Use Board pin numbers
@@ -244,19 +244,19 @@ def pauseDevice():#disables optoControl
     GPIO.output(CONTROLOPTO,False)             # Opto
     print("Paused device")
 
-# def check_if_authorized(card):
-#     global userName, user_1_state, user_2_state
-#     USERS ={"100019744","100019747"} #visitor 1 id #visitor 4 id
-#     #write user compatison code for sql in this
-#     userName
-#     if card in BackUp_USER:
-#         userName = "Admin"
-#         user_1_state=1
-#         user_2_state=1
-#         return True
-#     if card in USERS:
-#         return True
-#     return False	# function returns true if authorized user otherwise false
+def check_if_authorized(card):
+    global userName, user_1_state, user_2_state
+    USERS ={"100019744","100019747"} #visitor 1 id #visitor 4 id
+    #write user compatison code for sql in this
+    userName
+    if card in BackUp_USER:
+        userName = "Admin"
+        user_1_state=1
+        user_2_state=1
+        return True
+    if card in USERS:
+        return True
+    return False	# function returns true if authorized user otherwise false
 
 def assignUserToMachine(card):
     global user_1_state , user_2_state, user_1_ID, user_2_ID, buddySwipeReuiredBy
@@ -267,22 +267,20 @@ def assignUserToMachine(card):
         user_1_ID = card
         GPIO.output(USER1LED,True)
         GPIO.output(USER2LED,True)
-    if(endTime != 0):           #if machine is running check to see if it is the user currently swiped in
-            if(user_1_ID ==card or user_2_ID == card):  #if the card is user1 or user 2's replace user 1 with that card
+    if(endTime != 0):
+            if(user_1_ID ==card):
                 user_1_state =1
-                user_1_ID =card     #sets user1 ID to be card number
-                user_2_state=0
-                user_2_ID =""
-            elif(check_if_admin(card)):             #admin user state
-                user_1_ID = card    #admin card number replaces user1
-                user_1_state =1     
-                user_2_ID =card     #admin card number replaces user2
+            elif(user_2_ID ==card):
+                user_2_state=1
+            elif(authorized =="admin"):             #admin user state
+                user_1_ID = card
+                user_1_state =1
+                user_2_ID =card
                 user_2_state =1
             else:
                 authorized = False
                 print("Another user is currently using the machine")
     if(authorized):
-        auth_sel=1
         if(user_1_state==0):
             user_1_state=1
             user_1_ID= card
@@ -305,7 +303,8 @@ def assignUserToMachine(card):
                 buddySwipeReuiredBy=time.time()+twoSwipeTime     
     else:
         print("non-authorized user")
-        auth_sel=2
+        #not_authorized.grid(row=1,column=0)
+        
 
 def noBuddySwipe():#send to database that id 1 didn't have a buddy
     global user_1_state, user_1_ID
@@ -338,28 +337,25 @@ Grid.rowconfigure(win,2,weight=1)
 Grid.rowconfigure(win,3,weight=1)
 Grid.columnconfigure(win,0,weight=1)
 Grid.columnconfigure(win,1,weight=1)
-
+ 
 win.title("Access Control")#window name
 win.geometry('800x480')#size of window
-#countDownText = "count"
-countDown = Label(win ,anchor=CENTER,font= myFont, bg="white") #create label for countdown
-#countDown.pack()
-countDown.grid(row=2,columnspan=2, sticky="nsew")#puts the countdown to the center of the screen
-
+win.configure(bg='white')
+countDownText = "count"
+countDown = Label(win,text= countDownText ,anchor=E,font= myFont, fg="white", bg="red") #create label for countdown
+countDown.grid(row=0,column=1)
 
 #Title Label
-top= Label(text="ECE Makerspace",anchor=W,font=myFont, fg="white", bg="red")
+top= Label(text="ECE Makerspace",anchor=E,font=myFont, fg="white", bg="red")
 top.grid(row=0,column=0)
-clock= Label(text="clock", font=myFont, anchor=E, fg='white', bg='red')
-clock.grid(row=0,column=1)
 
 #User Name Label
-welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, bg="white")
-welcome.grid(row=1,columnspan=2)
+welcome= Label(text="Welcome USER!", anchor=CENTER, font=myFont, fg='blue')
+#welcome.grid(row=1,columnspan=2)
 
 #End Session Label
-button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg="white")
-button.grid(row=3,columnspan=2)
+button=Label(text="Push Button To End Session", anchor=CENTER, font=myFont, bg='white', fg='blue')
+#button.grid(row=3,column=0)
 
 #Buddy Label
 buddy=Label(text="Buddy Required, Swipe Another ID", anchor=CENTER, font=myFont, fg='purple', bg='white')
@@ -381,7 +377,12 @@ not_authorized= Label(text="NOT AUTHORIZED", anchor=CENTER, font=myFont, bg='whi
 start=Label(text="Swipe Card To Begin Session", anchor=CENTER, bg='white', font=myFont, fg='blue')
 start.grid(row=1,columnspan=2)
 
-configurePi()
+
+
+
+   
+    
+#configurePi()
 
 disableDevice()
 
@@ -394,9 +395,8 @@ th2.start()
 while True:
     if(endTime!=0):
         countdown()
-    #else:
-        
-    clock.config(text= time.strftime("%I:%M:%S")) #displays time in 12 hour format
+    else:
+        countDown.config(text= time.strftime("%I:%M:%S")) #displays time in 12 hour format
     
     if(buddySwipeReuiredBy!=0):
         currentTime =buddySwipeReuiredBy-time.time() 
@@ -414,24 +414,11 @@ while True:
         if(GPIO.input(BUTTON2)==GPIO.LOW):
             disableDevice()
     if(userName != ""):
-        welcome.config(text="Welcome "+ userName)
+        welcome.config(text="Welcome: "+ userName)
     else:
-        welcome.config(text="Swipe Card To Begin Session")
+        welcome.config(text="Welcome USER!")
+        #print("Welcome USER!")
     
-    if(auth_sel==0):
-        label_time=3
-    #elif(auth_sel ==1):
-        #welcome.config(text="AUTHORIZED", fg='green')
-        #label_time=label_time-1
-        #if(label_time==0):
-            #auth_sel=0
-    #elif(auth_sel==2):
-        #welcome.config(text="NOT AUTHORIZED", fg='red')
-        #label_time=label_time-1
-        #if(label_time==0):
-            #auth_sel=0
-
-
     win.update()
     time.sleep(.5)  #sleeps for 1/2 a second 
 

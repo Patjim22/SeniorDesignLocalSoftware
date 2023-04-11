@@ -4,7 +4,7 @@ import sys
 import re
 from tkinter import *
 from tkinter import font
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
 card = "0"
 global start 
