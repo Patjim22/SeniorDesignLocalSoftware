@@ -207,7 +207,7 @@ def enableDevice(): #enables the usb and Control OPTO issolators and starts the 
     GPIO.output(CONTROLOPTO,True)              # Opto
     GPIO.output(USBSEL,True)                 	# USB
     GPIO.output(USBENABLE, False)
-    GPIO.ouput(EXTERNALRELAY, True)
+    GPIO.output(EXTERNALRELAY, True)
     print("ACTIVATED")
     GPIO.output(DEVICEENABLED,True)                	# Device enable light
     endTime = time.time()+countDownIncrementer
