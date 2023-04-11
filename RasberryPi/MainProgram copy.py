@@ -48,7 +48,7 @@ DEVICEON =21                                     #22 is green LED device On
 USER1LED =23                                    #27 user 1 #17 user 2 yellow LEDs
 USER2LED=33
 DEVICEENABLED =35                                     #4 and 3  RED LEDS
-REDLED2 =37
+EXTERNALRELAY =37
 CONTROLOPTO =11                                 #2 control opto
 USBSEL =8                                      #14 usb sel changes which usb port on pcb is being used 1 is port 2 which is the port the device is plugged in to and 0 is the other port that is not in use
 USBENABLE = 10                                  #when high disables usb ports on pcb
@@ -207,6 +207,7 @@ def enableDevice(): #enables the usb and Control OPTO issolators and starts the 
     GPIO.output(CONTROLOPTO,True)              # Opto
     GPIO.output(USBSEL,True)                 	# USB
     GPIO.output(USBENABLE, False)
+    GPIO.ouput(EXTERNALRELAY, True)
     print("ACTIVATED")
     GPIO.output(DEVICEENABLED,True)                	# Device enable light
     endTime = time.time()+countDownIncrementer
@@ -217,6 +218,7 @@ def disableDevice():
     GPIO.output(CONTROLOPTO,False)             # Opto
     GPIO.output(USBSEL,False)                	# USB
     GPIO.output(USBENABLE, True)
+    GPIO.ouput(EXTERNALRELAY, False)
     GPIO.output(USER2LED,False)               	# User 2 led
     GPIO.output(USER1LED,False)                # User1 led
     print("DISABLED")
