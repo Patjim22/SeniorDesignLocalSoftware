@@ -310,13 +310,11 @@ def noBuddySwipe():#send to database that id 1 didn't have a buddy
 
 def SessionStarted():#enables user welcome message and disables start message
     welcome.grid(row=1,columnspan=2)
-    start.grid_forget()
     buddy.grid_forget()
     button.grid(row=3,column=0)
     
 def SessionEnded():#enables user welcome message and disables start message
     welcome.grid_forget()
-    start.grid(row=1,columnspan=2)
     button.grid_forget()
     
 
@@ -355,11 +353,6 @@ welcome.grid(row=1,columnspan=2)
 #End Session Label
 button=Label(text=" ", anchor=CENTER, font=myFont, bg='white', fg='blue')
 button.grid(row=3,columnspan=2)
-
-
-#Start Label
-start=Label(text=" ", anchor=CENTER, bg='white', font=myFont, fg='blue')
-start.grid(row=1,columnspan=2)
  
 #configurePi()
 
