@@ -230,7 +230,7 @@ def disableDevice():
     user_2_ID =0
     userName =""
     endTime=0
-    #SessionEnded()
+    SessionEnded()
 
 def pauseDevice():#disables optoControl
     GPIO.output(CONTROLOPTO,False)             # Opto
@@ -303,19 +303,12 @@ def assignUserToMachine(card):
 
 def noBuddySwipe():#send to database that id 1 didn't have a buddy
     global user_1_state, user_1_ID
-    buddy.grid_forget()
     GPIO.output(USER1LED,False)
     user_1_state= 0
     user_1_ID= 0
-
-def SessionStarted():#enables user welcome message and disables start message
-    welcome.grid(row=1,columnspan=2)
-    buddy.grid_forget()
-    button.grid(row=3,column=0)
     
 def SessionEnded():#enables user welcome message and disables start message
-    welcome.grid_forget()
-    button.grid_forget()
+    gui_state =0
     
 
 setupGPIO()
@@ -367,32 +360,7 @@ th2.start()
 while True:
     if(endTime!=0):
         countdown()
-    #else:
-     #   countDown.config(text= time.strftime("%I:%M:%S")) #displays time in 12 hour format
-    
     clock.config(text= time.strftime("%I:%M:%S"))
-    
-    
-    #if(buddySwipeReuiredBy!=0):
-     #   currentTime =buddySwipeReuiredBy-time.time() 
-      #  if(currentTime >0):
-            #print you have blank time to swipe
-       #     print("Time for Buddy Swipe: "+str(int(currentTime/60)) +":" +str(int(currentTime%60)))
-        #    countDown.config(text="Buddy Required, Swipe Another ID: "+str(int(currentTime/60)) +":" +str(int(currentTime%60)))
-        #else:
-         #   buddySwipeReuiredBy=0
-          #  noBuddySwipe()
-    
-    # if(GPIO.input(BUTTON2)==GPIO.LOW):
-    #     print("Button 2")
-    #     time.sleep(.5)
-    #     if(GPIO.input(BUTTON2)==GPIO.LOW):
-    #         disableDevice()
-    #if(userName != ""):
-    #    welcome.config(text="Welcome: "+ userName)
-    #else:
-    #    welcome.config(text="Welcome USER!")
-        #print("Welcome USER!")
 
     if(gui_state==0):
         welcome.config(text="Swipe Card To Begin Session", fg='blue')
