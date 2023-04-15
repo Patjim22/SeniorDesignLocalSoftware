@@ -329,13 +329,13 @@ win.title("Access Control")#window name
 win.geometry('800x480')#size of window
 win.configure(bg="white")
 countDownText = "count"
-countDown = Label(win,anchor=E,font= myFont, bg="white") #create label for countdown
+countDown = Label(win,anchor=E,font= myFont, bg="white") #create label for countdown that goes in the top right
 countDown.grid(row=2,column=0, sticky="nsew")
-timeLabel = Label(text=" ", fg='black', font=('Helvetica',25,'bold'), bg='white', anchor=W)
+timeLabel = Label(text=" ", fg='black', font=('Helvetica',25,'bold'), bg='white', anchor=W) #Third Row label displays time remaining in session
 timeLabel.grid(row=2,column=1)
 
 #Title Label
-top= Label(text="ECE Makerspace",anchor=W,font=myFont, fg="white", bg="red")
+top= Label(text="ECE Makerspace",anchor=W,font=myFont, fg="white", bg="red") #displays ECE makerspace in the top left corner
 top.grid(row=0,column=0)
 clock= Label(text=" ", font=myFont, anchor=E, fg='white', bg='red')
 clock.grid(row=0,column=1)
@@ -365,6 +365,7 @@ while True:
 
     if(gui_state==0):
         welcome.config(text="Swipe Card To Begin Session", fg='blue')
+        timeLabel.config(text="")
         if(time.time()>1700):
             button.config(text="After 5 PM, Buddy Swipe Required")
     elif(gui_state==1):  
