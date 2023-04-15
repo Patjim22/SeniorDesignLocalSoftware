@@ -125,7 +125,7 @@ class Read_Card_Tread (threading.Thread): #reads the card
         line = '' 
         caps = False 
 
-        dev =evdev.InputDevice('/dev/input/event0')
+        dev =evdev.InputDevice('/dev/input/event0') #selects the first device plugged into the pi
         dev.grab()
 
         for event in dev.read_loop():
@@ -185,8 +185,16 @@ def countdown(): #does the countdown when it is required
     currentTime =endTime-time.time()                            #measures the endtime vs current time
     #currentTime = time.time()
     if(currentTime >0):
-        if(currentTime<=TIMETOTURNBUZZERON):
+        if(currentTime<=300 and currentTime>=250):  #5 minutes buzz for 10 seconds
             GPIO.output(BUZZER, True)
+        elif(currentTime<=120 and currentTime>=110):  #2 minutes buzz for 10 seconds
+            GPIO.output(BUZZER, True)
+        elif(currentTime<=60 and currentTime>=50):  #1 minutes buzz for 10 seconds
+            GPIO.output(BUZZER, True)
+        elif(currentTime<=20 and currentTime>=0):  #5 minutes buzz for 10 seconds
+            GPIO.output(BUZZER, True)
+        else:
+            GPIO.output(BUZZER, False)
         countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
     else:
         endTime =0
@@ -250,6 +258,7 @@ def assignUserToMachine(card):
         user_1_ID = card
         GPIO.output(USER1LED,True)
         GPIO.output(USER2LED,True)
+        authorized = True
         enableDevice()
     if(endTime != 0):           #if machine is running check to see if it is the user currently swiped in
             if(user_1_ID ==card or user_2_ID == card):  #if the card is user1 or user 2's replace user 1 with that card
@@ -319,17 +328,17 @@ Grid.columnconfigure(win,1,weight=1)
  
 win.title("Access Control")#window name
 win.geometry('800x480')#size of window
-win.configure(bg='white')
+win.configure(bg="white")
 countDownText = "count"
-countDown = Label(win,anchor=E,font= myFont, bg="white") #create label for countdown
+countDown = Label(win,anchor=E,font= myFont, bg="white") #create label for countdown that goes in the thirdrow
 countDown.grid(row=2,column=0, sticky="nsew")
-timeLabel = Label(text=" ", fg='black', font=('Helvetica',25,'bold'), bg='white', anchor=W)
+timeLabel = Label(text=" ", fg='black', font=('Helvetica',25,'bold'), bg='white', anchor=W) #Third Row label displays text for minutes
 timeLabel.grid(row=2,column=1)
 
 #Title Label
-top= Label(text="ECE Makerspace",anchor=W,font=myFont, fg="white", bg="red")
+top= Label(text="ECE Makerspace",anchor=W,font=myFont, fg="white", bg="red") #displays ECE makerspace in the top left corner
 top.grid(row=0,column=0)
-clock= Label(text=" ", font=myFont, anchor=E, fg='white', bg='red')
+clock= Label(text=" ", font=myFont, anchor=E, fg='white', bg='red')#clock in the top left corner of screen
 clock.grid(row=0,column=1)
 
 #User Name Label
@@ -357,6 +366,7 @@ while True:
 
     if(gui_state==0):
         welcome.config(text="Swipe Card To Begin Session", fg='blue')
+        countDown.config(text="")
         if(time.time()>1700):
             button.config(text="After 5 PM, Buddy Swipe Required")
     elif(gui_state==1):  
@@ -407,7 +417,7 @@ while True:
     
     if(GPIO.input(BUTTON2)==GPIO.LOW):
         print("Button 2")
-        time.sleep(.5)
+        time.sleep(2)
         if(GPIO.input(BUTTON2)==GPIO.LOW):
             disableDevice()
     win.update()

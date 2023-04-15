@@ -258,6 +258,7 @@ def assignUserToMachine(card):
         user_1_ID = card
         GPIO.output(USER1LED,True)
         GPIO.output(USER2LED,True)
+        authorized = True
         enableDevice()
     if(endTime != 0):           #if machine is running check to see if it is the user currently swiped in
             if(user_1_ID ==card or user_2_ID == card):  #if the card is user1 or user 2's replace user 1 with that card
