@@ -319,7 +319,7 @@ Grid.columnconfigure(win,1,weight=1)
  
 win.title("Access Control")#window name
 win.geometry('800x480')#size of window
-win.configure(bg='white')
+win.configure(bg="white")
 countDownText = "count"
 countDown = Label(win,anchor=E,font= myFont, bg="white") #create label for countdown
 countDown.grid(row=2,column=0, sticky="nsew")
