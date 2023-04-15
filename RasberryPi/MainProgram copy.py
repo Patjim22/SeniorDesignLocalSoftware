@@ -368,6 +368,7 @@ while True:
     if(gui_state==0):
         welcome.config(text="Swipe Card To Begin Session", fg='blue')
         countDown.config(text="")
+        timeLabel.config(text="")
         if(time.time()>1700):
             button.config(text="After 5 PM, Buddy Swipe Required")
     elif(gui_state==1):  
