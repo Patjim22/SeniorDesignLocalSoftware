@@ -310,6 +310,7 @@ def noBuddySwipe():#send to database that id 1 didn't have a buddy
     user_1_ID= 0
     
 def SessionEnded():#enables user welcome message and disables start message
+    global gui_state
     gui_state =0
     
 
