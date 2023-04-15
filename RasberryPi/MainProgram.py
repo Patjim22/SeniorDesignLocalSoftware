@@ -185,8 +185,16 @@ def countdown(): #does the countdown when it is required
     currentTime =endTime-time.time()                            #measures the endtime vs current time
     #currentTime = time.time()
     if(currentTime >0):
-        if(currentTime<=TIMETOTURNBUZZERON):
+        if(currentTime<=300 and currentTime>=250):  #5 minutes buzz for 10 seconds
             GPIO.output(BUZZER, True)
+        elif(currentTime<=120 and currentTime>=110):  #2 minutes buzz for 10 seconds
+            GPIO.output(BUZZER, True)
+        elif(currentTime<=60 and currentTime>=50):  #1 minutes buzz for 10 seconds
+            GPIO.output(BUZZER, True)
+        elif(currentTime<=20 and currentTime>=0):  #5 minutes buzz for 10 seconds
+            GPIO.output(BUZZER, True)
+        else:
+            GPIO.output(BUZZER, False)
         countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
     else:
         endTime =0
@@ -407,7 +415,7 @@ while True:
     
     if(GPIO.input(BUTTON2)==GPIO.LOW):
         print("Button 2")
-        time.sleep(.5)
+        time.sleep(2)
         if(GPIO.input(BUTTON2)==GPIO.LOW):
             disableDevice()
     win.update()

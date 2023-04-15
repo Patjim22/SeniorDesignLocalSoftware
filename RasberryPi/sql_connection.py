@@ -47,9 +47,9 @@ def check_if_admin(card): #function returns true if admin
 def configurePi():#pull config data from SQL database
     try:
         CONFIG_URL = "http://" + os.getenv('HOST', 'localhost') + ":8082/config.php"
-        config_response = requests.get(CONFIG_URL, headers=API_HEADERS);
+        config_response = requests.get(CONFIG_URL, headers=API_HEADERS)
         if config_response.status_code == 200:
-            config_values = config_response.json();
+            config_values = config_response.json()
             countDownMinutes = config_values['countDownMinutes'] # should be editable to change the length of the countdown
             endOfWorkingHours = config_values['endOfWorkingHours']  # changes the end time of the makerspace working hours
             beginningOfWorkHours = config_values['beginningOfWorkHours']  # changes the start time of the makerspace working hours
