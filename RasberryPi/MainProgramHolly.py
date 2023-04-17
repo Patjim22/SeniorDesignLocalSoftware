@@ -368,10 +368,6 @@ button=Label(text=" ", anchor=CENTER, font=myFont, bg='white', fg='blue')
 button.grid(row=3,columnspan=2)
 
 
-#Start Label
-start=Label(text=" ", anchor=CENTER, bg='white', font=myFont, fg='blue')
-start.grid(row=1,columnspan=2)
- 
 #configurePi()
 
 disableDevice()
@@ -414,7 +410,7 @@ while True:
 
     if(gui_state==0):
         welcome.config(text="Swipe Card To Begin Session", fg='blue')
-        if(time.time()>1700):
+        if(time.time()<1700):
             button.config(text="After 5 PM, Buddy Swipe Required")
     elif(gui_state==1):  
         button.config(text=" ")
