@@ -124,10 +124,8 @@ class Read_Card_Tread (threading.Thread): #reads the card
         #setup vars 
         line = '' 
         caps = False 
-
         dev =evdev.InputDevice('/dev/input/event0') #selects the first device plugged into the pi
-        dev.grab()
-
+        dev.grab()                                  #code holds the keycard reader so it cant be stolen by another app
         for event in dev.read_loop():
             if event.type == ecodes.EV_KEY: 
                 data = categorize(event) # Save the event temporarily to introspect it 
@@ -146,8 +144,8 @@ class Read_Card_Tread (threading.Thread): #reads the card
                     if(data.scancode == 28): 
                      print (line)   # Print it all out!
                      rshiftCheck=False 
-                     regSearch =re.compile('\+.*')
-                     cardNumber = regSearch.match(line)
+                     regSearch =re.compile('\+.*') #Reg ex setup for the first Check for the ID format Looks for a "+" sign which deliminates track 3 on the cards
+                     cardNumber = regSearch.match(line) #actual regex search 
                      if(cardNumber==None):
                         rshiftCheck =True
                         regSearch =re.compile('RSHFT=.*')
@@ -308,10 +306,12 @@ def noBuddySwipe():#send to database that id 1 didn't have a buddy
     GPIO.output(USER1LED,False)
     user_1_state= 0
     user_1_ID= 0
+    noBuddyAPICall()
     
 def SessionEnded():#enables user welcome message and disables start message
     global gui_state
     gui_state =0
+    SessionEndedAPICall()
     
 
 setupGPIO()
@@ -350,28 +350,28 @@ welcome.grid(row=1,columnspan=2)
 button=Label(text=" ", anchor=CENTER, font=myFont, bg='white', fg='blue')
 button.grid(row=3,columnspan=2)
  
-#configurePi()
+configurePi()
 
 disableDevice()
 
-countDownIncrementer = countDownMinutes*60 #number of minutes wanted goes where the 1 is
-th1=  ID_Check_Thread("T1",1000)
-th2 = Read_Card_Tread("T2",2000)
+th1=  ID_Check_Thread("T1",1000)# declare ID_Check as thread 1 with id 1000
+th2 = Read_Card_Tread("T2",2000)# declare ID_Check as thread 2 with id 2000
 th1.start()
 th2.start()
 
 while True:
-    if(endTime!=0):
+    if(endTime!=0):#if their is a session running which is when endTime is not equal to zero
         countdown()
-    clock.config(text= time.strftime("%I:%M:%S"))
+        
+    clock.config(text= time.strftime("%I:%M:%S"))#Prints the time on the screen
 
-    if(gui_state==0):
+    if(gui_state==0): #initial gui state
         welcome.config(text="Swipe Card To Begin Session", fg='blue')
         countDown.config(text="")
         timeLabel.config(text="")
         if(time.time()>1700):
             button.config(text="After 5 PM, Buddy Swipe Required")
-    elif(gui_state==1):  
+    elif(gui_state==1): #Authorized state moves it to the running state afterward
         button.config(text=" ")
         if(gui_flag==0):
             gui_count=time.time()+1
@@ -385,7 +385,7 @@ while True:
                     gui_state=4
                 else:
                     gui_state=3
-    elif(gui_state==2):
+    elif(gui_state==2):#Non authorized label
         button.config(text=" ")
         welcome.config(text="NOT AUTHORIZED", fg='red')
         if(gui_flag==0):
@@ -396,7 +396,7 @@ while True:
                 gui_state=0
                 gui_flag=0
                 gui_count=0
-    elif(gui_state==3):
+    elif(gui_state==3):#Running Labels  
         timeLabel.config(text="Minutes Remaining")
         if(userName != ""):
             welcome.config(text="Welcome: "+ userName, fg='blue')
@@ -407,7 +407,7 @@ while True:
             button.config(text="Reswipe To Continue Session", fg='red')
         else:
             button.config(text="Hold Button To End Session", fg='purple')
-    elif(gui_state==4):
+    elif(gui_state==4): #Buddy Required Label
         currentTime =buddySwipeReuiredBy-time.time() 
         if(currentTime >0):
             #print you have blank time to swipe

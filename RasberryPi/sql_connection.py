@@ -53,8 +53,13 @@ def configurePi():#pull config data from SQL database
             countDownMinutes = config_values['countDownMinutes'] # should be editable to change the length of the countdown
             endOfWorkingHours = config_values['endOfWorkingHours']  # changes the end time of the makerspace working hours
             beginningOfWorkHours = config_values['beginningOfWorkHours']  # changes the start time of the makerspace working hours
-            twoSwipeTime = config_values['twoSwipeTime']  #deault is 10sec change to give buddy more or less time to swipe after first swipe
-            countDownIncrementer = countDownMinutes*60 #number of minutes wanted goes where the 1 is
+            twoSwipeTime = config_values['twoSwipeTime']  #deault is 20sec change to give buddy more or less time to swipe after first swipe
+            countDownIncrementer = countDownMinutes*60 #turns the number of minutes wanted into seconds
     except Exception as e:
         print(repr(e))
     return
+
+def noBuddyAPICall(): # sends a event to the database to say they had no buddy swipe
+    
+    
+def SessionEndedAPICall(): # sends a event to the database to say they have ended their session
