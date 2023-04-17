@@ -364,7 +364,8 @@ welcome.grid(row=1,columnspan=2)
 #End Session Label
 button=Label(text=" ", anchor=CENTER, font=myFont, bg='white', fg='blue')
 button.grid(row=3,columnspan=2)
- 
+
+
 #configurePi()
 
 disableDevice()
@@ -407,7 +408,7 @@ while True:
 
     if(gui_state==0):
         welcome.config(text="Swipe Card To Begin Session", fg='blue')
-        if(time.time()>1700):
+        if((time.localtime().tm_hour>endOfWorkingHours and time.localtime().tm_hour <=beginningOfWorkHours)):
             button.config(text="After 5 PM, Buddy Swipe Required")
     elif(gui_state==1):  
         button.config(text=" ")
