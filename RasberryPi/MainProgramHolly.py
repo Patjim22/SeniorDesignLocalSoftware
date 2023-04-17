@@ -275,7 +275,7 @@ def assignUserToMachine(card):
                 user_1_state =1
             elif(user_2_ID ==card):
                 user_2_state=1
-            elif(authorized =="admin"):             #admin user state
+            elif(check_if_admin(card)):             #admin user state
                 user_1_ID = card
                 user_1_state =1
                 user_2_ID =card
@@ -321,13 +321,11 @@ def noBuddySwipe():#send to database that id 1 didn't have a buddy
 
 def SessionStarted():#enables user welcome message and disables start message
     welcome.grid(row=1,columnspan=2)
-    start.grid_forget()
     buddy.grid_forget()
     button.grid(row=3,column=0)
     
 def SessionEnded():#enables user welcome message and disables start message
     welcome.grid_forget()
-    start.grid(row=1,columnspan=2)
     button.grid_forget()
     
 
