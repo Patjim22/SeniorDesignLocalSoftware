@@ -422,6 +422,12 @@ while True:
         time.sleep(2)
         if(GPIO.input(BUTTON2)==GPIO.LOW):
             disableDevice()
+    if(GPIO.input(BUTTON1)==GPIO.LOW):
+        print("Button 1")
+        disableDevice()
+        
+                
+    
     win.update()
     time.sleep(.5)  #sleeps for 1/2 a second 
 

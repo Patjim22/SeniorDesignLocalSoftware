@@ -1,9 +1,0 @@
-[Unit]
-Description=MakerSpace Access Control
-After=graphical.target
-[Service]
-ExecStart=/usr/bin/sh /home/project13/makerspace/launch.sh
-Restart=always
-User=project13
-[Install]
-WantedBy=graphical.target
