@@ -78,8 +78,6 @@ class ID_Check_Thread (threading.Thread):
                 #     if((user_1_ID ==card) or (user_2_ID ==card)):
                 #         assignUserToMachine(card)
                 card ="0"
-                
-                
             time.sleep(2)   #sleep 2 seconds
 
 class Read_Card_Tread (threading.Thread): #reads the card
