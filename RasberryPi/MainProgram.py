@@ -25,10 +25,11 @@ global user_1_state, user_2_state
 twoSwipeTime = 20        #used to hold how long to wait for a buddy to swipe
 buddySwipeReuiredBy=0   #holds the time to cancel out and say you were rejected because no buddy
 userName =""
-countDownMinutes=4
+countDownMinutes=2.1
 countDownIncrementer = countDownMinutes*60 #number of minutes wanted goes where the 1 is
 endOfWorkingHours=17	#5pm
 beginningOfWorkHours=8	#8am
+TIMESTOBUZ = {5,2,1,.33}    #this is the times for the buzzer to buzz at this is in minutes
 TIMETOTURNBUZZERON =10 #in seconds
 user_1_state =0
 user_2_state = 0
@@ -183,17 +184,15 @@ def countdown(): #does the countdown when it is required
     currentTime =endTime-time.time()                            #measures the endtime vs current time
     #currentTime = time.time()
     if(currentTime >0):
-        if(currentTime<=300 and currentTime>=250):  #5 minutes buzz for 10 seconds
-            GPIO.output(BUZZER, True)
-        elif(currentTime<=120 and currentTime>=110):  #2 minutes buzz for 10 seconds
-            GPIO.output(BUZZER, True)
-        elif(currentTime<=60 and currentTime>=50):  #1 minutes buzz for 10 seconds
-            GPIO.output(BUZZER, True)
-        elif(currentTime<=20 and currentTime>=0):  #5 minutes buzz for 10 seconds
-            GPIO.output(BUZZER, True)
-        else:
-            GPIO.output(BUZZER, False)
-        countDown.config(text=str(int(currentTime/60)) +":" +str(int(currentTime%60)))
+        buzzEnable = False
+        for value in TIMESTOBUZ:
+            if(currentTime <= value*60 and currentTime >= value*60 - TIMETOTURNBUZZERON):
+                GPIO.output(BUZZER,True)
+                print("Buzz"+str(value))
+        if buzzEnable == False :
+            GPIO.output(BUZZER,True)
+            pass
+        countDown.config(text=str(int(currentTime/60)) +":" +str("{:02d}".format(int(currentTime%60))))
     else:
         endTime =0
         GPIO.output(BUZZER, False)
@@ -258,6 +257,8 @@ def assignUserToMachine(card):
         GPIO.output(USER2LED,True)
         authorized = True
         enableDevice()
+        gui_state=1
+        return
     if(endTime != 0):           #if machine is running check to see if it is the user currently swiped in
             if(user_1_ID ==card or user_2_ID == card):  #if the card is user1 or user 2's replace user 1 with that card
                 user_1_state =1
@@ -411,8 +412,8 @@ while True:
         currentTime =buddySwipeReuiredBy-time.time() 
         if(currentTime >0):
             #print you have blank time to swipe
-            print("Time for Buddy Swipe: "+str(int(currentTime/60)) +":" +str(int(currentTime%60)))
-            welcome.config(text="Buddy Required, Swipe Another ID: "+str(int(currentTime/60)) +":" +str(int(currentTime%60)), fg='blue')
+            print("Time for Buddy Swipe: "+str(int(currentTime/60)) +":" +str("{:02d}".format(int(currentTime%60))))
+            welcome.config(text="Buddy Required, Swipe Another ID: "+str(int(currentTime/60)) +":" +str("{:02d}".format(int(currentTime%60))), fg='blue')
         else:
             buddySwipeReuiredBy=0
             noBuddySwipe()
@@ -425,6 +426,7 @@ while True:
     if(GPIO.input(BUTTON1)==GPIO.LOW):
         print("Button 1")
         disableDevice()
+        os.system('shutdown now')
         
                 
     

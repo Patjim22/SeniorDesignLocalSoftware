@@ -55,11 +55,13 @@ def configurePi():#pull config data from SQL database
             beginningOfWorkHours = config_values['beginningOfWorkHours']  # changes the start time of the makerspace working hours
             twoSwipeTime = config_values['twoSwipeTime']  #deault is 20sec change to give buddy more or less time to swipe after first swipe
             countDownIncrementer = countDownMinutes*60 #turns the number of minutes wanted into seconds
+            TIMESTOBUZ = {5,2,1,.33}    #this is the times for the buzzer to buzz at this is in minutes
     except Exception as e:
         print(repr(e))
     return
 
 def noBuddyAPICall(): # sends a event to the database to say they had no buddy swipe
-    
+    pass
     
 def SessionEndedAPICall(): # sends a event to the database to say they have ended their session
+    pass
