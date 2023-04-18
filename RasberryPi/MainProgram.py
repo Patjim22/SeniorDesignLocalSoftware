@@ -369,7 +369,7 @@ while True:
         welcome.config(text="Swipe Card To Begin Session", fg='blue')
         countDown.config(text="")
         timeLabel.config(text="")
-        if(time.time()>1700):
+        if((time.localtime().tm_hour>endOfWorkingHours and time.localtime().tm_hour <=beginningOfWorkHours)):
             button.config(text="After 5 PM, Buddy Swipe Required")
     elif(gui_state==1): #Authorized state moves it to the running state afterward
         button.config(text=" ")
