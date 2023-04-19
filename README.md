@@ -1,4 +1,4 @@
-# Makerspace Access Control
+# Makerspace Access Control Local Software
 This repository contains the python programs that run on the rasberry pi to control the machines and check against a Database via an API. 
 
 # Dependencies
