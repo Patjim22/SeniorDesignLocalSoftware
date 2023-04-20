@@ -187,11 +187,9 @@ def countdown(): #does the countdown when it is required
         buzzEnable = False
         for value in TIMESTOBUZ:
             if(currentTime <= value*60 and currentTime >= value*60 - TIMETOTURNBUZZERON):
-                GPIO.output(BUZZER,True)
+                buzzEnable = True
                 print("Buzz"+str(value))
-        if buzzEnable == False :
-            GPIO.output(BUZZER,True)
-            pass
+        GPIO.output(BUZZER,buzzEnable)
         countDown.config(text=str(int(currentTime/60)) +":" +str("{:02d}".format(int(currentTime%60))))
     else:
         endTime =0
