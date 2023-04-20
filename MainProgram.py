@@ -165,6 +165,19 @@ class Read_Card_Tread (threading.Thread): #reads the card
                             card = line[0:9]
                             print(line[0:9])
                      line = ''    
+class Read_Config_Thread (threading.Thread): #reads the card
+    def __init__(self, thread_name, thread_ID):
+        threading.Thread.__init__(self)
+        self.thread_name = thread_name
+        self.thread_ID = thread_ID
+
+    # helper function to execute the threads
+    def run(self):
+        global countDownIncrementer, endOfWorkingHours, beginningOfWorkHours, twoSwipeTime, TIMESTOBUZ, TIMETOTURNBUZZERON
+        while True:
+            countDownIncrementer, endOfWorkingHours, beginningOfWorkHours, twoSwipeTime, TIMESTOBUZ, TIMETOTURNBUZZERON = configurePi()
+            time.sleep(60*3) # Every 3 minutes
+
 def setupGPIO():
     GPIO.setmode(GPIO.BOARD)                                   #Use Board pin numbers
     GPIO.setwarnings(False)                                    # Suppresses warning messages from output.
@@ -356,8 +369,10 @@ disableDevice()
 
 th1=  ID_Check_Thread("T1",1000)# declare ID_Check as thread 1 with id 1000
 th2 = Read_Card_Tread("T2",2000)# declare ID_Check as thread 2 with id 2000
+th3 = Read_Config_Thread("T3",3000)
 th1.start()
 th2.start()
+th3.start()
 
 while True:
     if(endTime!=0):#if their is a session running which is when endTime is not equal to zero
