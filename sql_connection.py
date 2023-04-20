@@ -56,9 +56,10 @@ def configurePi():#pull config data from SQL database
             twoSwipeTime = config_values['twoSwipeTime']  #deault is 20sec change to give buddy more or less time to swipe after first swipe
             countDownIncrementer = countDownMinutes*60 #turns the number of minutes wanted into seconds
             TIMESTOBUZ = config_values['timesToBuzz'] # Array to buzz times minutes (can be non-integer)
+            return countDownIncrementer, endOfWorkingHours, beginningOfWorkHours, twoSwipeTime, TIMESTOBUZ
     except Exception as e:
         print(repr(e))
-    return countDownIncrementer, endOfWorkingHours, beginningOfWorkHours, twoSwipeTime, TIMESTOBUZ
+    return
 
 def noBuddyAPICall(): # sends a event to the database to say they had no buddy swipe
     pass
