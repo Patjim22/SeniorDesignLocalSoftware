@@ -245,7 +245,7 @@ def pauseDevice():#disables optoControl
 #     return False	# function returns true if authorized user otherwise false
 
 def assignUserToMachine(card):
-    global user_1_state , user_2_state, user_1_ID, user_2_ID, buddySwipeReuiredBy, gui_state
+    global user_1_state , user_2_state, user_1_ID, user_2_ID, buddySwipeReuiredBy, gui_state, userName
     authorized = check_if_authorized(card)
     if(card in BackUp_USER):    #checks if card is a backup user in the system and then activates machine
         user_1_state =1
@@ -272,10 +272,10 @@ def assignUserToMachine(card):
                 authorized = False
                 print("Another user is currently using the machine")
     if(authorized):
-        userName = get_name(user_1_ID)
         if(user_1_state==0):
             user_1_state=1
             user_1_ID= card
+            userName = get_name(user_1_ID)
             GPIO.output(USER1LED,True)
         if(user_1_state==1):
             if(card != user_1_ID):
@@ -399,7 +399,7 @@ while True:
     elif(gui_state==3):#Running Labels  
         timeLabel.config(text="Minutes Remaining")
         if(userName != ""):
-            welcome.config(text="Welcome: "+ userName, fg='blue')
+            welcome.config(text="Welcome " + userName, fg='blue')
         else:
             welcome.config(text="Welcome USER!", fg='blue')
 

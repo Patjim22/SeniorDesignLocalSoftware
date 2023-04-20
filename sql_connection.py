@@ -79,8 +79,9 @@ def get_name(id):#pull config data from SQL database
     try:
         NAME_URL = "http://" + os.getenv('HOST', 'localhost') + ":8082/name.php"
         name_response = requests.get(NAME_URL, headers=API_HEADERS, data=json.dumps( { "Users" : [id] } ))
-        if config_response.status_code == 200:
-            return config_response.json()['Users'][0]
+        if name_response.status_code == 200:
+            return name_response.json()[id]
     except Exception as e:
         print(repr(e))
+        return repr(e)
     return "UNKNOWN"
