@@ -351,7 +351,7 @@ welcome.grid(row=1,columnspan=2)
 button=Label(text=" ", anchor=CENTER, font=myFont, bg='white', fg='blue')
 button.grid(row=3,columnspan=2)
  
-configurePi()
+countDownIncrementer, endOfWorkingHours, beginningOfWorkHours, twoSwipeTime, TIMESTOBUZ = configurePi()
 
 disableDevice()
 
