@@ -50,12 +50,12 @@ def configurePi():#pull config data from SQL database
         config_response = requests.get(CONFIG_URL, headers=API_HEADERS)
         if config_response.status_code == 200:
             config_values = config_response.json()
-            countDownMinutes = config_values['countDownMinutes'] # should be editable to change the length of the countdown
-            endOfWorkingHours = config_values['endOfWorkingHours']  # changes the end time of the makerspace working hours
-            beginningOfWorkHours = config_values['beginningOfWorkHours']  # changes the start time of the makerspace working hours
-            twoSwipeTime = config_values['twoSwipeTime']  #deault is 20sec change to give buddy more or less time to swipe after first swipe
+            countDownMinutes = float(config_values['countDownMinutes']) # should be editable to change the length of the countdown
+            endOfWorkingHours = float(config_values['endOfWorkingHours'])  # changes the end time of the makerspace working hours
+            beginningOfWorkHours = float(config_values['beginningOfWorkHours'])  # changes the start time of the makerspace working hours
+            twoSwipeTime = float(config_values['twoSwipeTime'])  #deault is 20sec change to give buddy more or less time to swipe after first swipe
             countDownIncrementer = countDownMinutes*60 #turns the number of minutes wanted into seconds
-            TIMESTOBUZ = config_values['timesToBuzz'] # Array to buzz times minutes (can be non-integer)
+            TIMESTOBUZ = [float(time) for time in config_values['timesToBuzz']] # Array to buzz times minutes (can be non-integer)
             return countDownIncrementer, endOfWorkingHours, beginningOfWorkHours, twoSwipeTime, TIMESTOBUZ
     except Exception as e:
         print(repr(e))
