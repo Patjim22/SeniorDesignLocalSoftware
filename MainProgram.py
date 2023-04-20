@@ -272,6 +272,7 @@ def assignUserToMachine(card):
                 authorized = False
                 print("Another user is currently using the machine")
     if(authorized):
+        userName = get_name(user_1_ID)
         if(user_1_state==0):
             user_1_state=1
             user_1_ID= card
