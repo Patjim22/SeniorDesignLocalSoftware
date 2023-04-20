@@ -64,13 +64,13 @@ def configurePi():#pull config data from SQL database
 def noBuddyAPICall(): # sends a event to the database to say they had no buddy swipe
     try:
         LOG_URL = "http://" + os.getenv('HOST', 'localhost') + ":8082/log.php"
-        requests.post(LOG_URL, headers=API_HEADERS, data=json.dumps( { "Events" : ["Authentication Failed - No Buddy Swipe"]));
+        requests.post(LOG_URL, headers=API_HEADERS, data=json.dumps( { "Events" : ["Authentication Failed - No Buddy Swipe"] } ))
     except Exception as e:
         print(repr(e))
     
 def SessionEndedAPICall(): # sends a event to the database to say they have ended their session
     try:
         LOG_URL = "http://" + os.getenv('HOST', 'localhost') + ":8082/log.php"
-        requests.post(LOG_URL, headers=API_HEADERS, data=json.dumps( { "Events" : ["Session Ended"]));
+        requests.post(LOG_URL, headers=API_HEADERS, data=json.dumps( { "Events" : ["Session Ended"] } ))
     except Exception as e:
         print(repr(e))
