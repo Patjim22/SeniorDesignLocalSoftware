@@ -56,7 +56,8 @@ def configurePi():#pull config data from SQL database
             twoSwipeTime = float(config_values['twoSwipeTime'])  #deault is 20sec change to give buddy more or less time to swipe after first swipe
             countDownIncrementer = countDownMinutes*60 #turns the number of minutes wanted into seconds
             TIMESTOBUZ = [float(time) for time in config_values['timesToBuzz']] # Array to buzz times minutes (can be non-integer)
-            return countDownIncrementer, endOfWorkingHours, beginningOfWorkHours, twoSwipeTime, TIMESTOBUZ
+            TIMETOTURNBUZZERON = float(config_values['buzzTime']) # Buzz length (seconds)
+            return countDownIncrementer, endOfWorkingHours, beginningOfWorkHours, twoSwipeTime, TIMESTOBUZ, TIMETOTURNBUZZERON
     except Exception as e:
         print(repr(e))
     return
