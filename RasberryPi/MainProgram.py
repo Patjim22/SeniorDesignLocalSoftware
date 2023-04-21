@@ -307,6 +307,7 @@ def noBuddySwipe():#send to database that id 1 didn't have a buddy
     GPIO.output(USER1LED,False)
     user_1_state= 0
     user_1_ID= 0
+    welcome.config(text="")
     noBuddyAPICall()
     
 def SessionEnded():#enables user welcome message and disables start message
@@ -413,7 +414,7 @@ while True:
         if(currentTime >0):
             #print you have blank time to swipe
             print("Time for Buddy Swipe: "+str(int(currentTime/60)) +":" +str("{:02d}".format(int(currentTime%60))))
-            welcome.config(text="Buddy Required, Swipe Another ID: "+str(int(currentTime/60)) +":" +str("{:02d}".format(int(currentTime%60))), fg='blue')
+            welcome.config(text="Swipe Buddy ID: "+str(int(currentTime/60)) +":" +str("{:02d}".format(int(currentTime%60))), fg='blue')
         else:
             buddySwipeReuiredBy=0
             noBuddySwipe()
