@@ -165,6 +165,19 @@ class Read_Card_Tread (threading.Thread): #reads the card
                             card = line[0:9]
                             print(line[0:9])
                      line = ''    
+class Read_Config_Thread (threading.Thread): #reads the card
+    def __init__(self, thread_name, thread_ID):
+        threading.Thread.__init__(self)
+        self.thread_name = thread_name
+        self.thread_ID = thread_ID
+
+    # helper function to execute the threads
+    def run(self):
+        global countDownIncrementer, endOfWorkingHours, beginningOfWorkHours, twoSwipeTime, TIMESTOBUZ, TIMETOTURNBUZZERON
+        while True:
+            countDownIncrementer, endOfWorkingHours, beginningOfWorkHours, twoSwipeTime, TIMESTOBUZ, TIMETOTURNBUZZERON = configurePi()
+            time.sleep(60*3) # Every 3 minutes
+
 def setupGPIO():
     GPIO.setmode(GPIO.BOARD)                                   #Use Board pin numbers
     GPIO.setwarnings(False)                                    # Suppresses warning messages from output.
@@ -187,11 +200,9 @@ def countdown(): #does the countdown when it is required
         buzzEnable = False
         for value in TIMESTOBUZ:
             if(currentTime <= value*60 and currentTime >= value*60 - TIMETOTURNBUZZERON):
-                GPIO.output(BUZZER,True)
+                buzzEnable = True
                 print("Buzz"+str(value))
-        if buzzEnable == False :
-            GPIO.output(BUZZER,True)
-            pass
+        GPIO.output(BUZZER,buzzEnable)
         countDown.config(text=str(int(currentTime/60)) +":" +str("{:02d}".format(int(currentTime%60))))
     else:
         endTime =0
@@ -247,7 +258,7 @@ def pauseDevice():#disables optoControl
 #     return False	# function returns true if authorized user otherwise false
 
 def assignUserToMachine(card):
-    global user_1_state , user_2_state, user_1_ID, user_2_ID, buddySwipeReuiredBy, gui_state
+    global user_1_state , user_2_state, user_1_ID, user_2_ID, buddySwipeReuiredBy, gui_state, userName
     authorized = check_if_authorized(card)
     if(card in BackUp_USER):    #checks if card is a backup user in the system and then activates machine
         user_1_state =1
@@ -277,6 +288,7 @@ def assignUserToMachine(card):
         if(user_1_state==0):
             user_1_state=1
             user_1_ID= card
+            userName = get_name(user_1_ID)
             GPIO.output(USER1LED,True)
         if(user_1_state==1):
             if(card != user_1_ID):
@@ -307,7 +319,6 @@ def noBuddySwipe():#send to database that id 1 didn't have a buddy
     GPIO.output(USER1LED,False)
     user_1_state= 0
     user_1_ID= 0
-    welcome.config(text="")
     noBuddyAPICall()
     
 def SessionEnded():#enables user welcome message and disables start message
@@ -352,14 +363,16 @@ welcome.grid(row=1,columnspan=2)
 button=Label(text=" ", anchor=CENTER, font=myFont, bg='white', fg='blue')
 button.grid(row=3,columnspan=2)
  
-configurePi()
+countDownIncrementer, endOfWorkingHours, beginningOfWorkHours, twoSwipeTime, TIMESTOBUZ, TIMETOTURNBUZZERON = configurePi()
 
 disableDevice()
 
 th1=  ID_Check_Thread("T1",1000)# declare ID_Check as thread 1 with id 1000
 th2 = Read_Card_Tread("T2",2000)# declare ID_Check as thread 2 with id 2000
+th3 = Read_Config_Thread("T3",3000)
 th1.start()
 th2.start()
+th3.start()
 
 while True:
     if(endTime!=0):#if their is a session running which is when endTime is not equal to zero
@@ -401,7 +414,7 @@ while True:
     elif(gui_state==3):#Running Labels  
         timeLabel.config(text="Minutes Remaining")
         if(userName != ""):
-            welcome.config(text="Welcome: "+ userName, fg='blue')
+            welcome.config(text="Welcome " + userName, fg='blue')
         else:
             welcome.config(text="Welcome USER!", fg='blue')
 
@@ -414,7 +427,7 @@ while True:
         if(currentTime >0):
             #print you have blank time to swipe
             print("Time for Buddy Swipe: "+str(int(currentTime/60)) +":" +str("{:02d}".format(int(currentTime%60))))
-            welcome.config(text="Swipe Buddy ID: "+str(int(currentTime/60)) +":" +str("{:02d}".format(int(currentTime%60))), fg='blue')
+            welcome.config(text="Buddy Required, Swipe Another ID: "+str(int(currentTime/60)) +":" +str("{:02d}".format(int(currentTime%60))), fg='blue')
         else:
             buddySwipeReuiredBy=0
             noBuddySwipe()
