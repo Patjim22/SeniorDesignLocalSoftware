@@ -259,7 +259,7 @@ def pauseDevice():#disables optoControl
 #     return False	# function returns true if authorized user otherwise false
 
 def assignUserToMachine(card):
-    global user_1_state , user_2_state, user_1_ID, user_2_ID, buddySwipeReuiredBy, gui_state, userName
+    global user_1_state , user_2_state, user_1_ID, user_2_ID, buddySwipeReuiredBy, gui_state, userName, waitingOnNextSwipe
     authorized = check_if_authorized(card)
     if(card in BackUp_USER):    #checks if card is a backup user in the system and then activates machine
         user_1_state =1
