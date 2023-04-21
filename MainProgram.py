@@ -122,7 +122,6 @@ class Read_Card_Tread (threading.Thread): #reads the card
     40: u'\'', 41: u'~', 42: u'LSHFT', 43: u'|', 44: u'Z', 45: u'X', 46: u'C', 47: u'V', 48: u'B', 49: u'N', 
     50: u'M', 51: u'<', 52: u'>', 53: u'?', 54: u'RSHFT', 56: u'LALT', 57: u' ', 100: u'RALT' 
 } 
-        global countDownIncrementer, endOfWorkingHours, beginningOfWorkHours, twoSwipeTime, TIMESTOBUZ, TIMETOTURNBUZZERON
         #setup vars 
         line = '' 
         caps = False 
@@ -165,8 +164,7 @@ class Read_Card_Tread (threading.Thread): #reads the card
                         if(len(line)==9):
                             card = line[0:9]
                             print(line[0:9])
-                    countDownIncrementer, endOfWorkingHours, beginningOfWorkHours, twoSwipeTime, TIMESTOBUZ, TIMETOTURNBUZZERON = configurePi()
-                    line = ''    
+                     line = ''    
 class Read_Config_Thread (threading.Thread): #reads the card
     def __init__(self, thread_name, thread_ID):
         threading.Thread.__init__(self)
@@ -195,7 +193,7 @@ def setupGPIO():
     print("GPIO SETUP")
 
 def countdown(): #does the countdown when it is required
-    global endTime, gui_state
+    global endTime
     currentTime =endTime-time.time()                            #measures the endtime vs current time
     #currentTime = time.time()
     if(currentTime >0):
@@ -206,7 +204,6 @@ def countdown(): #does the countdown when it is required
                 print("Buzz"+str(value))
         GPIO.output(BUZZER,buzzEnable)
         countDown.config(text=str(int(currentTime/60)) +":" +str("{:02d}".format(int(currentTime%60))))
-        gui_state =3
     else:
         endTime =0
         GPIO.output(BUZZER, False)
