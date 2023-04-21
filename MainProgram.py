@@ -31,6 +31,7 @@ endOfWorkingHours=17	#5pm
 beginningOfWorkHours=8	#8am
 TIMESTOBUZ = {5,2,1,.33}    #this is the times for the buzzer to buzz at this is in minutes
 TIMETOTURNBUZZERON =10 #in seconds
+waitingOnNextSwipe =False
 user_1_state =0
 user_2_state = 0
 user_1_ID = 0
@@ -271,11 +272,12 @@ def assignUserToMachine(card):
         gui_state=1
         return
     if(endTime != 0):           #if machine is running check to see if it is the user currently swiped in
-            if(user_1_ID ==card or user_2_ID == card):  #if the card is user1 or user 2's replace user 1 with that card
+            if(user_1_ID ==card or user_2_ID == card and waitingOnNextSwipe ==False):  #if the card is user1 or user 2's replace user 1 with that card
                 user_1_state =1
                 user_1_ID =card     #sets user1 ID to be card number
                 user_2_state=0
                 user_2_ID =""
+                waitingOnNextSwipe = True
             elif(check_if_admin(card)):             #admin user state
                 user_1_ID = card    #admin card number replaces user1
                 user_1_state =1     
@@ -295,6 +297,7 @@ def assignUserToMachine(card):
                 user_2_state=1
                 user_2_ID = card
                 buddySwipeReuiredBy=0
+                waitingOnNextSwipe = False
                 GPIO.output(USER2LED,True)
         if(time.localtime().tm_hour<endOfWorkingHours and time.localtime().tm_hour >=beginningOfWorkHours):#during working houres only 1 user is needed
             if(user_1_state or user_2_state):
@@ -406,7 +409,10 @@ while True:
         welcome.config(text="NOT AUTHORIZED", fg='red')
         if(gui_flag==0):
             gui_count=time.time()+1
-            gui_flag=1
+            if(endTime>0):
+                gui_state =3
+            else:
+                gui_flag=1
         else:
             if(time.time()>=gui_count):
                 gui_state=0
