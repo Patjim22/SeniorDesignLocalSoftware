@@ -272,9 +272,7 @@ def assignUserToMachine(card):
         gui_state=1
         return
     if(endTime != 0):           #if machine is running check to see if it is the user currently swiped in
-            if(waitingOnNextSwipe):
-                pass
-            elif(user_1_ID ==card or user_2_ID == card and waitingOnNextSwipe ==False):  #if the card is user1 or user 2's replace user 1 with that card
+            if(user_1_ID ==card or user_2_ID == card and waitingOnNextSwipe ==False):  #if the card is user1 or user 2's replace user 1 with that card
                 user_1_state =1
                 user_1_ID =card     #sets user1 ID to be card number
                 user_2_state=0
@@ -286,7 +284,6 @@ def assignUserToMachine(card):
                 user_2_ID =card     #admin card number replaces user2
                 user_2_state =1
             else:
-                authorized = False
                 print("Another user is currently using the machine")
     if(authorized):
         if(user_1_state==0):
